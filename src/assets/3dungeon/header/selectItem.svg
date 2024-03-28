@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 38.34">
+  <g id="most_liked" data-name="most liked">
+    <g>
+      <path d="M931,554.86H864.19V523.42l64.45,0,5,5H1033l6.8-6.8h16.39v31.48h-18.55l-6.81,6.83H936.05l-5-5"
+        transform="translate(-864.19 -521.54)" fill="#161616" />
+      <line x1="2.54" y1="4.39" x2="2.54" y2="9.68" fill="none" stroke="#0a0a0a" stroke-miterlimit="10" />
+      <line x1="2.54" y1="23.31" x2="2.54" y2="28.59" fill="none" stroke="#0a0a0a" stroke-miterlimit="10" />
+    </g>
+  </g>
+</svg>

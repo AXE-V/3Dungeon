@@ -1,0 +1,8 @@
+<svg id="auth_frame" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 219.48 53.7">
+  <g id="w_label">
+    <polygon points="0 53.7 206.8 53.7 219.48 41.01 219.48 0 0 0 0 53.7" fill="#0f0f0f"/>
+    <g opacity="0.75">
+      <text transform="translate(13.13 30.28)" font-size="22" fill="#fff" font-family="ISL_FADETOBLAK, ISL_FADE TO BLAK">uploading file</text>
+    </g>
+  </g>
+</svg>
