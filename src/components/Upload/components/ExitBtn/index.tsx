@@ -1,8 +1,8 @@
 import { FC } from "react";
 import { SVGComponent } from "../../../../interfaces/SVGComponent";
 import { Styles } from "../style";
-import { Cross } from "../../../User/components/Cross";
 import { Link } from "react-router-dom";
+import { Cross } from "../../../Common/Cross";
 
 export const ExtiBtn: FC<SVGComponent> = (params) => {
   return ( 
@@ -24,7 +24,6 @@ export const ExtiBtn: FC<SVGComponent> = (params) => {
         width: '2.4vw', 
         marginRight: '1vw'}}
         />
-
 
     <svg id="Слой_1" {...params} style={{width: '11.1vw'}} data-name="Слой 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 219.48 53.7">
   <g id="btn_exit">

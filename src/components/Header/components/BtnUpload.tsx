@@ -1,21 +1,37 @@
-import { FC } from "react";
+import { FC, SyntheticEvent } from "react";
 import { SVGComponent } from "../../../interfaces/SVGComponent";
-import { Link } from "react-router-dom";
+import { styleController } from "../../../utils/styleController";
+import { useNavigate } from "react-router-dom";
+import { getSession } from "../../../api/authSign";
 
-export const BtnUpload: FC<SVGComponent> = ({style, onMouseOver, onMouseLeave}) => {
+export const BtnUpload: FC<SVGComponent> = ({style}) => {
+  const navigate = useNavigate()
+  const session = getSession()
+
+  function onClick<E extends SyntheticEvent<EventTarget>>(e: E) {  
+    session ? navigate('/upload') : navigate('/auth/login')
+  }
+
+  function onMouseLeave<E extends SyntheticEvent<EventTarget>>(e: E) {    
+    styleController({target: e, command: 'remove'})
+  }
+
+  function onMouseOver<E extends SyntheticEvent<EventTarget>>(e: E) {  
+    styleController({target: e, command: 'add', style: {fill: '#111'}})
+  }
 
   return ( 
-   <Link to='/user/:id/upload'>
      <svg 
       style={{...style}}
       onMouseOver={onMouseOver} 
       onMouseLeave={onMouseLeave}
+      onClick={onClick}
       viewBox="0 0 150 42">
       <polygon
         points="69.99 3.06 66.81 0 27.58 0 24.4 3.06 7.72 3.06 0 10.45 0 42 35.97 42 39.61 38.94 124.18 38.94 128.11 42 146.74 42 146.74 17.3 150 12.88 150 3.06 69.99 3.06"
         fill="#1c1c1c" data-focus-fill />
       <text transform="translate(42.37 27.74) scale(1.04 1)" font-size="19.24" fill="#c6b63f"
-        font-family="ISL_FADETOBLAK, ISL_FADE TO BLAK">Upload</text>
+        font-family="ISL_FADETOBLAK, ISL_FADE TO BLAK" style={{userSelect: 'none'}}>Upload</text>
       <g>
         <polyline points="9.77 29.16 9.77 33.5 29.18 33.5 29.18 29.16" fill="none" stroke="#4d4d4d"
           strokeMiterlimit="10" />
@@ -35,6 +51,5 @@ export const BtnUpload: FC<SVGComponent> = ({style, onMouseOver, onMouseLeave}) 
       <path d="M1024.49,415" transform="translate(-1001.13 -411.89)" fill="#bfa613" />
       <line x1="146.81" y1="1.53" x2="150" y2="1.53" fill="none" stroke="#c6b63f" strokeMiterlimit="10" />
   </svg>
-   </Link>
    );
 }

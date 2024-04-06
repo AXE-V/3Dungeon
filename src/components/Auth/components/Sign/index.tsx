@@ -1,10 +1,10 @@
 import { FC } from "react";
 import { SVGComponent } from "../../../../interfaces/SVGComponent";
 import { styles } from "./style";
-import { useSignEvents } from "../../../../hooks/useSignEvents";
+import { useSign } from "../../../../hooks/useSign";
 
 export const Sign: FC<SVGComponent & {path: string}> = ({style, label, _id, path}) => {
-  const {onClick, onMouseLeave, onMouseOver, signRef} = useSignEvents(_id, path)
+  const {onClick, onMouseLeave, onMouseOver, signRef} = useSign(_id, path)
 
   return ( 
       <div 

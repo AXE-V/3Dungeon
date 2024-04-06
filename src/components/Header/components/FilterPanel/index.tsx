@@ -1,6 +1,6 @@
 import { BtnReset } from "./components/BtnReset";
 import styles from "../../components/FilterPanel/style";
-import { Select } from "./components/Select/Select";
+import { Select } from "./components/Select";
 import { FC } from "react";
 import { SVGComponent } from "../../../../interfaces/SVGComponent";
 
@@ -24,7 +24,11 @@ const FilterPanel: FC<SVGComponent> = ({style}) => {
 
   const getSelectComponent = (obj: []) => {
     for (const [key, val] of Object.entries(obj)) {
-      return <Select style={{height: size}} label={key} items={val as string[]}/>
+      return <Select 
+        style={{height: size}} 
+        key={key} 
+        label={key} 
+        items={val as string[]}/>
     }
   }
 

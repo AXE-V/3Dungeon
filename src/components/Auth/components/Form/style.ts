@@ -43,6 +43,7 @@ export const Styles = {
     padding: '.5vw',
     background: '$dark2',
     clipPath: cssPathes.inpCounter,
+    pointerEvents: 'all',
     '&:hover': {
       background: '$dark3'
     }

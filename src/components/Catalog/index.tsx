@@ -1,23 +1,31 @@
-import { SyntheticEvent, useEffect } from "react";
 import { BgGradient, Cell, MainBodyDecor } from "../../assets/decor/nonInteractive";
 import Styles from "./style";
-import { useSelector } from "react-redux";
-import { authState } from "../../redux/slices/data/auth";
-import Card from "./components/Card";
-import { BtnNextBack } from "./components/BtnNextBack";
-import { styleBtnNextBack } from "./components/BtnNextBack/style";
+import {Card_1} from "../Common/Cards/1";
+import { BtnNextBack } from "../Common/BtnNextBack";
+import { setSession, userState } from "../../redux/slices/data/user";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { supabase } from "../../supabase";
+import { AppDispath } from "../../redux/store";
 
+// токен сессии по умолчанию 
+// sb-guflskihwrcehwjtxlab-auth-token
 const Catalog = () => {
-  const authR = useSelector(authState)
+  const userR = useSelector(userState)
+  const dispatch = useDispatch<AppDispath>()
+  
+  useEffect(() => { 
+    dispatch(setSession())
+  }, [])
 
   useEffect(() => {
-    console.log(authR.data);
-  }, [])
+    localStorage.setItem('supabase session', JSON.stringify(userR.session))
+  }, [userR.session])
 
   const cards = () => {
     const arrCards = []
     for (let i = 0; i < 12; i++) {
-      arrCards.push(<Card style={{height: '12vw'}} />)
+      arrCards.push(<Card_1 style={{height: '12vw'}} />)
     }
     return arrCards
   }
@@ -28,8 +36,8 @@ const Catalog = () => {
         {cards()}
       </Styles.CardContainer>
       <section>
-        <BtnNextBack className={styleBtnNextBack()} style={{left: '.6vw'}}/>
-        <BtnNextBack className={styleBtnNextBack()} style={{right: '.6vw', rotate: '180deg'}}/>
+        <BtnNextBack  style={{left: '.6vw'}}/>
+        <BtnNextBack  style={{right: '.6vw', rotate: '180deg'}}/>
         <div className={Styles.cellContainer()}>
           <Cell/>
           <Cell/>

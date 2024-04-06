@@ -1,33 +1,25 @@
 
 import styles from './style';
-import {BtnFilter} from './components/FilterPanel/BtnFilter';
-
+import {BtnFilter} from './components/FilterPanel/components/BtnFilter';
 import {BtnNotification} from './components/BtnNotification';
 import {BtnUpload} from './components/BtnUpload';
-import {BtnUser} from './components/BtnUser';
+import {BtnUser} from './components/UserPanel/BtnUser';
 import {HeaderBg} from './components/HeaderBg';
-import {Logo} from './components/Logo';
+import {Logo} from '../Common/Logo';
 import {LogoText} from './components/LogoText';
 import {Search} from './components/Search'; 
 import FilterPanel from './components/FilterPanel/index';
-import { SyntheticEvent, useState } from 'react';
+import { useState } from 'react';
 import { cssAnimations } from '../../style';
 import { Link } from 'react-router-dom';
-import { styleController } from '../../assets/decor/interactive';
-import { BtnCart } from './components/CartPanel/BtnCart';
+import { BtnCart } from './components/CartPanel/components/BtnCart';
+import { CartPanel } from './components/CartPanel';
 
 
 const Header = () => {
   const [filterPanelIsOpen, setFilterPanelIsOpen] = useState(false)
+  const [cartPanelIsOpen, setCartPanelIsOpen] = useState(false)
   const height = "2.2vw"
-
-  function onMouseLeave<E extends SyntheticEvent<EventTarget>>(e: E) {    
-    !filterPanelIsOpen ? styleController(e, {command: 'remove'}) : void 0
-  }
-
-  function onMouseOver<E extends SyntheticEvent<EventTarget>>(e: E) {  
-    !filterPanelIsOpen ? styleController(e, {command: 'add'}) : void 0
-  }
   
   return ( 
     <>
@@ -43,27 +35,20 @@ const Header = () => {
             style={{height: height}}
             stateValue={filterPanelIsOpen}
             setStateValue={setFilterPanelIsOpen}
-            onMouseLeave={onMouseLeave}
-            onMouseOver={onMouseOver}
             />
           <BtnCart 
             style={{ height: height }}
-            onMouseLeave={onMouseLeave}
-            onMouseOver={onMouseOver} />
+            stateValue={cartPanelIsOpen}
+            setStateValue={setCartPanelIsOpen}
+            />
           <BtnNotification 
             style={{height: height}}
-            onMouseOver={onMouseOver}
-            onMouseLeave={onMouseLeave}
             />
           <BtnUpload 
             style={{height: height}}
-            onMouseOver={onMouseOver}
-            onMouseLeave={onMouseLeave}
             />
           <BtnUser 
             style={{height: height}}
-            onMouseOver={onMouseOver}
-            onMouseLeave={onMouseLeave}
             />
         </div>
         <FilterPanel 
@@ -74,7 +59,7 @@ const Header = () => {
             `${cssAnimations.shiftBottom} .2s ease-out forwards` : void 0}}
             />
       </header>
-      
+      {cartPanelIsOpen && <CartPanel />}
     </>
    );
 }

@@ -1,11 +1,12 @@
 import { BgGradient } from "../../assets/decor/nonInteractive";
-import { Logo } from "../Header/components/Logo";
+import { Logo } from "../Common/Logo";
 import { Frame } from "./components/Frame";
 import { Sign } from "./components/Sign";
 import {Styles} from "./style";
 import { FormRegLog } from "./components/Form";
 
 const Auth = () => {
+
   const signData = [
     {label: 'sign in', path: '/auth/login'},
     {label: 'sign up', path: '/auth/register'},

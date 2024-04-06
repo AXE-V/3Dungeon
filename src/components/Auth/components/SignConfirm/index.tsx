@@ -2,21 +2,21 @@ import { FC, SyntheticEvent } from "react";
 import { SVGComponent } from "../../../../interfaces/SVGComponent";
 import { useLocation } from "react-router-dom";
 import { styles } from "./style";
-import { styleController } from "../../../../assets/decor/interactive";
+import { styleController } from "../../../../utils/styleController";
 
 export const SignConfirm: FC<SVGComponent> = (params) => {
   const location = useLocation()
 
   function onMouseOver<E extends SyntheticEvent<EventTarget>>(e: E) { 
-    styleController(e, {command: 'add', style: { fill: '#fff', stroke: '#fff'}})
+    styleController({target: e, command: 'add', style: { fill: '#fff', stroke: '#fff'}})
   }
 
   function onMouseLeave<E extends SyntheticEvent<EventTarget>>(e: E) {
-    styleController(e, {command: 'remove'})
+    styleController({target: e, command: 'remove'})
   }
 
   function onClick<E extends SyntheticEvent<EventTarget>>(e: E) {
-    styleController(e, {command: 'add', style: { background: '#fff', stroke: '#fff'}});
+    styleController({target: e, command: 'add', style: { background: '#fff', stroke: '#fff'}});
   }
 
   return (

@@ -11,7 +11,7 @@ export const Styles = {
     top: '.7vw'
   }),
 
-  HeaderText: styled('div', {
+  HeaderText: styled('p', {
     position: 'absolute',
     fontSize: '1vw', 
     color: '$accent1',
@@ -30,7 +30,7 @@ export const Styles = {
    top: '27vw', 
    left: '50%', 
    transform: 'translate(-50%, 0)', 
-   opacity: .75
+   opacity: .75,
   }),
 
   Info1: styled('div', {

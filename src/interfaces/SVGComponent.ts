@@ -1,9 +1,13 @@
+import { Session } from '@supabase/supabase-js'
 import {SVGProps} from 'react'
+import { StateType } from './StateType'
 
 interface Basics {
   _id?: number,
   _idParent?: number,
-  refference?: any
+  refference?: any,
+
+  session?: Session
 }
 
 interface InputInter {
@@ -12,4 +16,4 @@ interface InputInter {
   register?: {}
 }
 
-export interface SVGComponent extends SVGProps<SVGSVGElement>, Basics, InputInter {}
+export interface SVGComponent extends SVGProps<SVGSVGElement>, Basics, InputInter, StateType {}

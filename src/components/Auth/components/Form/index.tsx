@@ -1,40 +1,53 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Field_1 } from "../Field";
+import { Field_1 } from "../../../Common/Fields/1";
 import { Styles } from "./style";
 import { SignConfirm } from "../SignConfirm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { FormInputs } from "../../../../interfaces/FormInputs";
-import { loginUser, registerUser } from "../../../../redux/slices/data/auth";
-import { useFormRegLogEvents } from "../../../../hooks/useFormRegLog";
-import { getFormFieldsOptions } from "./fieldsOptions";
+import { getFieldsOptions } from "./options";
+import { supabase } from "../../../../supabase";
+import { authLogin, authRegister } from "../../../../api/authSign";
+import { useDispatch, useSelector } from "react-redux";
+import { UserData, userState } from "../../../../redux/slices/data/user";
+import { AppDispath } from "../../../../redux/store";
+import { useDropFocus } from "../../../../hooks/useDropFocus";
 
 export const FormRegLog = () => {
   const {register, handleSubmit, formState: {errors}} = useForm<FormInputs>()
-  const [isSubmitted, setSubmit] = useState<Boolean>(false)
-  const navigate = useNavigate()
+  const [isSucces, setSucces] = useState<Boolean>(false)
   const location = useLocation()
+  const fields = getFieldsOptions()
   const width = "22vw"
-  const fields = getFormFieldsOptions()
-  const {dispath} = useFormRegLogEvents()
-
+  const [loading, setLoading] = useState(false)
+  const authR = useSelector(userState)
+  const {dispath} = useDropFocus()
+  
   const onSubmit: SubmitHandler<FormInputs> = async (params) => {
+    setLoading(true)
+
     if (location.pathname === '/auth/register') {
-      const {payload} = await dispath(registerUser(params))
-      // authRedirect(navigate, '/')
-      console.group()
-      console.log('register');
-      console.log(payload); 
-      console.groupEnd()
-    } else if (location.pathname === '/auth/login') {
-      const {payload} = await dispath(loginUser(params))
-      // authRedirect(navigate, '/')    
-      console.group()
-      console.log('login');
-      console.log(payload); 
-      console.groupEnd()
+      authRegister(params).then(({data, error}) => {
+        if (error) {
+          console.warn(error)
+          return
+        }
+        console.log(data)
+      })     
+      setSucces(true)       
+    } 
+    else if (location.pathname === '/auth/login') {
+      authLogin(params).then(({data, error}) => {
+        if (error) {
+          console.warn(error)
+          return
+        }
+        console.log(data);
+      })     
+      setSucces(true)     
     }
-    setSubmit(true)
+    
+    setLoading(false)
   }
 
   return ( 
@@ -72,15 +85,15 @@ export const FormRegLog = () => {
       )
     ))}    
 
-    <SignConfirm 
+    {!loading ? <SignConfirm 
       width={width} 
-      style={{marginTop: '1.5vw'}}/>
+      style={{marginTop: '1.5vw'}}/> : 'Loading...'}
 
     <Link to="#">
       <Styles.Span>forgot password</Styles.Span>
     </Link>
 
-    {isSubmitted && 
+    {isSucces && location.pathname === '/auth/register' &&
       <Styles.BevelSvg 
         style={{left: '63vw', top: '-12vw'}} 
         viewBox="0 0 400 80">

@@ -1,12 +1,10 @@
 import { FC } from "react";
 import { SVGComponent } from "../../../../interfaces/SVGComponent";
-import { Field_2 } from "./components/Field";
 import { Styles } from "./style";
-import { usePasswordEmailEvents } from "../../../../hooks/usePasswordEmailEvents";
+import { usePasswordEmail } from "../../../../hooks/usePasswordEmail";
 
-export const PasswordEmail: FC<SVGComponent & {headersData: string}> = ({_id, _idParent, headersData, label, style}) => {
-  const {onMouseLeave, onMouseOver} = usePasswordEmailEvents(_id, _idParent)
-
+export const PasswordEmail: FC<SVGComponent & {headersData?: string}> = ({children, _id, _idParent, headersData, label, style}) => {
+  const {onMouseLeave, onMouseOver} = usePasswordEmail(_id, _idParent)
   return ( 
     <div 
       style={{position: 'relative'}} 
@@ -31,10 +29,7 @@ export const PasswordEmail: FC<SVGComponent & {headersData: string}> = ({_id, _i
       </div>
 
       <Styles.FieldsContainer>        
-        {Array.isArray(label) ? 
-        label?.map((elem: any, i: number) => (
-          <Field_2 {...elem} key={i} _id={i} _idParent={_id} style={{width: '90%'}}/>
-        )) : void 0}     
+        {children}
       </Styles.FieldsContainer>
 
       <svg id='emailBox' style={style} viewBox="0 0 696.47 161.01">

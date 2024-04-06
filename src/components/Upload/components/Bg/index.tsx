@@ -1,10 +1,37 @@
-import { FC } from "react";
+import { FC, SyntheticEvent } from "react";
 import { SVGComponent } from "../../../../interfaces/SVGComponent";
+import { styleController } from "../../../../utils/styleController";
 
 export const BgUpload: FC<SVGComponent> = ({style}) => {
+
+  function onMouseLeave<E extends SyntheticEvent<EventTarget>>(e: E) {    
+    // styleController(e, {command: 'remove'})
+
+    
+  }
+
+  function onMouseOver<E extends SyntheticEvent<EventTarget>>(e: E) {  
+    // styleController(e, {command: 'add'})
+    // console.log((e.currentTarget as HTMLElement).childNodes);
+  }
+
   return ( 
-    <svg id="Слой_1" data-name="Слой 1" xmlns="http://www.w3.org/2000/svg"
-  viewBox="0 0 1871.03 947.51" style={{width: '95vw', position: 'absolute', left: '50%', top: '4vw',transform: 'translate(-50%, 0)', ...style}}>
+    <svg 
+      id="Слой_1" 
+      data-name="Слой 1" 
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 1871.03 947.51" 
+      onMouseLeave={onMouseLeave}
+      onMouseOver={onMouseOver}
+      style={{
+        width: '95vw', 
+        position: 'absolute', 
+        left: '50%', 
+        top: '4vw', 
+        transform: 'translate(-50%, 0)', 
+        zIndex: -1, 
+        ...style
+        }}>
   <defs>
     <pattern id="Новый_узор_3" data-name="Новый узор 3" width="120" height="120"
       patternTransform="matrix(-0.5, 0, 0, 0.5, 13.5, -103.69)" patternUnits="userSpaceOnUse" viewBox="0 0 120 120">
@@ -496,10 +523,10 @@ export const BgUpload: FC<SVGComponent> = ({style}) => {
         </g>
 
         <g id="fileOver">
-          <polyline data-stroke
+          <polyline data-focus-stroke
             points="1807.57 473.75 1807.57 214.4 1863.86 158.11 1863.86 96.51 1854.74 87.39 1754.42 87.39 1741.65 100.16 1573.49 100.16 1546.85 126.81"
             fill="none" stroke="#c6b63f" stroke-miterlimit="10" />
-          <polyline data-stroke
+          <polyline data-focus-stroke
             points="1344.79 128.69 1304.03 169.45 1285.1 169.45 1176.52 278.04 1134.75 278.04 1124.46 267.75 1084.98 267.75 1062.31 290.42"
             fill="none" stroke="#c6b63f" stroke-miterlimit="10" />
         </g>
@@ -611,10 +638,10 @@ export const BgUpload: FC<SVGComponent> = ({style}) => {
         </g>
 
         <g id="fileOver">
-          <polyline data-stroke
+          <polyline data-focus-stroke
             points="1807.57 473.75 1807.57 733.11 1863.86 789.4 1863.86 851 1854.74 860.12 1754.42 860.12 1741.65 847.35 1573.49 847.35 1546.85 820.7"
             fill="none" stroke="#c6b63f" stroke-miterlimit="10" />
-          <polyline data-stroke
+          <polyline data-focus-stroke
             points="1344.79 818.81 1304.03 778.06 1285.1 778.06 1176.52 669.47 1134.75 669.47 1124.46 679.76 1084.98 679.76 1062.31 657.09"
             fill="none" stroke="#c6b63f" stroke-miterlimit="10" />
         </g>
@@ -725,10 +752,10 @@ export const BgUpload: FC<SVGComponent> = ({style}) => {
             fill="url(#Новый_узор_3-5)" />
         </g>
         <g id="fileOver">
-          <polyline data-stroke
+          <polyline data-focus-stroke
             points="63.45 473.75 63.45 733.11 7.16 789.4 7.16 851 16.29 860.12 116.6 860.12 129.37 847.35 297.53 847.35 324.18 820.7"
             fill="none" stroke="#c6b63f" stroke-miterlimit="10" />
-          <polyline data-stroke
+          <polyline data-focus-stroke
             points="526.24 818.81 567 778.06 585.92 778.06 694.51 669.47 736.28 669.47 746.57 679.76 786.04 679.76 808.71 657.09"
             fill="none" stroke="#c6b63f" stroke-miterlimit="10" />
         </g>
@@ -836,10 +863,10 @@ export const BgUpload: FC<SVGComponent> = ({style}) => {
             fill="url(#Новый_узор_3-7)" />
         </g>
         <g id="fileOver">
-          <polyline data-stroke
+          <polyline data-focus-stroke
             points="63.45 473.75 63.45 214.4 7.16 158.11 7.16 96.51 16.29 87.39 116.6 87.39 129.37 100.16 297.53 100.16 324.18 126.81"
             fill="none" stroke="#c6b63f" stroke-miterlimit="10" />
-          <polyline data-stroke
+          <polyline data-focus-stroke
             points="526.24 128.69 567 169.45 585.92 169.45 694.51 278.04 736.28 278.04 746.57 267.75 786.04 267.75 808.71 290.42"
             fill="none" stroke="#c6b63f" stroke-miterlimit="10" />
         </g>

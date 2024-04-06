@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
+import { InputStorage } from "../../../interfaces/InputStorage";
 
-const initialState = {
+const initialState: InputStorage = {
   _id: -1,
   _idParent: -1,
   focus: false,

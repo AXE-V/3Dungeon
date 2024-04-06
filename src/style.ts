@@ -101,7 +101,7 @@ const globalStyles = globalCss({
     color: '$accent1',
     opacity: .75,
     border: 'none',
-    margin: '0 .5vw 0 0',
+    // margin: '0 .5vw 0 0',
     transition: '.15s ease-out',
     clipPath: cssPathes.inpCounter,
     '&:hover': {
@@ -109,47 +109,21 @@ const globalStyles = globalCss({
     }
   },
   
-  // стили для скроллбара 
-  '[data-container]': {
-    position: 'relative',
-    clipPath: cssPathes.modelWindow,
+  'a': {
+    textDecoration: 'none',
+    color: '$accent1',
   },
 
-  '[data-content]': {
-    height: '100%',
-    width: '100%',
-    overflowY: 'scroll',
+  'h1, p, span': {
+    userSelect: 'none',
+    pointerEvents: 'none'
   },
 
-  '[data-scrollbar-container]': {
-    position: 'absolute',
-    right: '0px',
-    bottom: '0px',
-    top: '3.5vw',
-    width: '34px',
-    background: '#0f0f0f',
-    '&::before': {
-      content: '',
-      position: 'absolute',
-      height: '100%',
-      width: '8px',
-      left: '50%',
-      transform: 'translateX(-50%)',
-      background: '#0a0a0a',
-    }
+  'ul, ol': {
+    listStyle: 'none',
   },
 
-  '[data-scrollbar]': {
-    position: 'absolute',
-    right: '50%',
-    transform: 'translateX(50%)',
-    height: '30px',
-    width: '8px',
-    borderRadius: '0px',
-    background: '#c6b63f',
-  },
-
-  '::-webkit-scrollbar': {
+  '*::-webkit-scrollbar': {
     display: 'none',
   }
 })
