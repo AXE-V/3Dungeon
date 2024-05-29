@@ -1,4 +1,5 @@
-import { styled } from "../../../stitches.config"
+import { styled } from '../../../stitches.config';
+import { cssAnimations } from '../../style';
 
 export const Styles = {
   Container: styled('div', {
@@ -6,7 +7,7 @@ export const Styles = {
     display: 'grid',
     justifyContent: 'center',
     justifyItems: 'center',
-    margin: '6vw'
+    margin: '6vw',
   }),
 
   Group: styled('div', {
@@ -17,4 +18,4 @@ export const Styles = {
     columnGap: '1vw',
     zIndex: 1,
   }),
-}
+};

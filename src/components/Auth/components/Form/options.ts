@@ -1,11 +1,17 @@
-import { RegisterOptions } from "react-hook-form"
-import { FormInputTypes, FormInputs } from "../../../../interfaces/FormInputs"
+import { RegisterOptions } from 'react-hook-form';
+
+export type FormInputs = {
+  login: string;
+  email: string;
+  password: string;
+};
+export type FormInputTypes = 'login' | 'email' | 'password';
 
 interface Fields {
-  label: FormInputTypes,
-  type: string,
-  placeholder: string,
-  registerOptions?: RegisterOptions<FormInputs, FormInputTypes> | undefined
+  label: FormInputTypes;
+  type: string;
+  placeholder: string;
+  registerOptions?: RegisterOptions;
 }
 
 export const getFieldsOptions = (): Fields[] => {
@@ -17,10 +23,10 @@ export const getFieldsOptions = (): Fields[] => {
       registerOptions: {
         required: 'Login is required',
         minLength: {
-          value: 2,
-          message: 'Minimum 2 characters'
-        }
-      }
+          value: 3,
+          message: 'Minimum 2 characters',
+        },
+      },
     },
     {
       label: 'email',
@@ -29,10 +35,10 @@ export const getFieldsOptions = (): Fields[] => {
       registerOptions: {
         required: 'Email is required',
         pattern: {
-          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, 
-          message: 'Email is not valid'
-        }
-      }
+          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+          message: 'Email is not valid',
+        },
+      },
     },
     {
       label: 'password',
@@ -42,9 +48,9 @@ export const getFieldsOptions = (): Fields[] => {
         required: 'Password is required',
         minLength: {
           value: 6,
-          message: 'Minimum 6 characters'
+          message: 'Minimum 6 characters',
         },
-      }
-    }
-  ]
-} 
+      },
+    },
+  ];
+};

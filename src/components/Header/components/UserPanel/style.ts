@@ -1,5 +1,5 @@
-import { styled } from "../../../../../stitches.config";
-import { cssPathes } from "../../../../style";
+import { styled } from '../../../../../stitches.config';
+import { cssPathes } from '../../../../style';
 
 export const Styles = {
   Menu: styled('div', {
@@ -7,14 +7,13 @@ export const Styles = {
     flexDirection: 'column',
     clipPath: cssPathes.bevelPolygon('.3vw'),
     '& ul:last-child': {
-      borderBottom: 'none'
-    }
+      borderBottom: 'none',
+    },
   }),
 
   MenuSection: styled('ul', {
     display: 'flex',
     flexDirection: 'column',
-    borderBottom: '2px solid $dark5'
   }),
 
   MenuItem: styled('li', {
@@ -23,5 +22,4 @@ export const Styles = {
     position: 'relative',
     background: '#111',
   }),
-  
-}
+};

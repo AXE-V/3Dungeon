@@ -1,19 +1,19 @@
-import { Session } from '@supabase/supabase-js'
-import {SVGProps} from 'react'
-import { StateType } from './StateType'
+import { Session, User } from '@supabase/supabase-js';
+import { MutableRefObject, SVGProps } from 'react';
+import { IState } from './IState';
+import { ActionCreator } from '@reduxjs/toolkit';
 
-interface Basics {
-  _id?: number,
-  _idParent?: number,
-  refference?: any,
-
-  session?: Session
+export interface Basics {
+  _id?: any;
+  _idParent?: any;
+  refference?: MutableRefObject<any>;
+  sliceValue?: any;
+  action?: ActionCreator<any>;
 }
 
-interface InputInter {
-  label?: string | string[],
-  placeholder?: string,
-  register?: {}
+interface UserData {
+  session?: Session | null;
+  user?: User | null;
 }
 
-export interface SVGComponent extends SVGProps<SVGSVGElement>, Basics, InputInter, StateType {}
+export interface SVGComponent extends SVGProps<SVGSVGElement>, UserData, IState {}

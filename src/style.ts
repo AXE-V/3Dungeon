@@ -51,8 +51,15 @@ export const cssPathes = {
   inpCounter: 'polygon(0% calc(0% + .4vw), calc(0% + .4vw) 0%, 100% 0%, 100% calc(100% - .55vw), calc(100% - .55vw) 100%, 0% 100%)',
   modelWindow: 'polygon(0 calc(0% + 6vw), calc(0% + 6vw) 0, calc(100% - 20vw) 0, calc(100% - 10vw) calc(0% + 3.5vw), 100% calc(0% + 3.5vw), 100% 100%, 0 100%)',
   modelViewer: 'polygon(0 calc(0% + 5.5vw), calc(0% + 5.5vw) 0, 100% 0, 100% 100%, 0 100%)',
-  bevelPolygon: (bevel: string) => `polygon(calc(0% + ${bevel}) 0, calc(100% - ${bevel}) 0, 100% calc(0% + ${bevel}), 100% calc(100% - ${bevel}), 
-    calc(100% - ${bevel}) 100%, calc(0% + ${bevel}) 100%, 0% calc(100% - ${bevel}), 0% calc(0% + ${bevel}))`,
+  bevelPolygon: (bevel: string | string[]) => {
+    if (Array.isArray(bevel) && bevel.length === 4) {
+      return `polygon(calc(0% + ${bevel[0]}) 0, calc(100% - ${bevel[1]}) 0, 100% calc(0% + ${bevel[1]}), 100% calc(100% - ${bevel[2]}), 
+      calc(100% - ${bevel[2]}) 100%, calc(0% + ${bevel[3]}) 100%, 0% calc(100% - ${bevel[3]}), 0% calc(0% + ${bevel[0]}))`
+    } else {
+      return `polygon(calc(0% + ${bevel}) 0, calc(100% - ${bevel}) 0, 100% calc(0% + ${bevel}), 100% calc(100% - ${bevel}), 
+      calc(100% - ${bevel}) 100%, calc(0% + ${bevel}) 100%, 0% calc(100% - ${bevel}), 0% calc(0% + ${bevel}))`
+    }
+  },
 }
 
 const globalStyles = globalCss({
@@ -91,17 +98,13 @@ const globalStyles = globalCss({
     zIndex: -2
   },
 
-  '.separator': {
-    display: 'none'
-  },
-
   button: {
     padding: '.5vw .7vw',
     background: '$dark3',
     color: '$accent1',
     opacity: .75,
+    fontSize: '1vw',
     border: 'none',
-    // margin: '0 .5vw 0 0',
     transition: '.15s ease-out',
     clipPath: cssPathes.inpCounter,
     '&:hover': {

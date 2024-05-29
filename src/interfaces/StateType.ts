@@ -1,1 +1,0 @@
-export type StateType = {stateValue?: any, setStateValue?: (val: any) => void}

@@ -1,117 +1,87 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Field_1 } from "../../../Common/Fields/1";
-import { Styles } from "./style";
-import { SignConfirm } from "../SignConfirm";
-import { useEffect, useState } from "react";
-import { useForm, SubmitHandler } from 'react-hook-form'
-import { FormInputs } from "../../../../interfaces/FormInputs";
-import { getFieldsOptions } from "./options";
-import { supabase } from "../../../../supabase";
-import { authLogin, authRegister } from "../../../../api/authSign";
-import { useDispatch, useSelector } from "react-redux";
-import { UserData, userState } from "../../../../redux/slices/data/user";
-import { AppDispath } from "../../../../redux/store";
-import { useDropFocus } from "../../../../hooks/useDropFocus";
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Field_1 } from '../../../Common/Fields/1';
+import { Styles } from './style';
+import { SignConfirm } from '../SignConfirm';
+import { useEffect, useState } from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { FormInputs, getFieldsOptions } from './options';
+import { useRegLog } from './hooks/useRegLog';
+import { Message } from '../../../Common/Message';
+import { useAuth } from '../../../../providers/authProvider';
 
 export const FormRegLog = () => {
-  const {register, handleSubmit, formState: {errors}} = useForm<FormInputs>()
-  const [isSucces, setSucces] = useState<Boolean>(false)
-  const location = useLocation()
-  const fields = getFieldsOptions()
-  const width = "22vw"
-  const [loading, setLoading] = useState(false)
-  const authR = useSelector(userState)
-  const {dispath} = useDropFocus()
-  
-  const onSubmit: SubmitHandler<FormInputs> = async (params) => {
-    setLoading(true)
+  const width = '22vw';
+  const fields = getFieldsOptions();
+  const navigate = useNavigate();
+  const { session } = useAuth();
+  const { handleSubmit, innerSubmit, register, errors, authError, loading, isSucces } = useRegLog();
 
-    if (location.pathname === '/auth/register') {
-      authRegister(params).then(({data, error}) => {
-        if (error) {
-          console.warn(error)
-          return
-        }
-        console.log(data)
-      })     
-      setSucces(true)       
-    } 
-    else if (location.pathname === '/auth/login') {
-      authLogin(params).then(({data, error}) => {
-        if (error) {
-          console.warn(error)
-          return
-        }
-        console.log(data);
-      })     
-      setSucces(true)     
+  const onSubmit: SubmitHandler<FormInputs> = (params) => {
+    innerSubmit(params);
+  };
+
+  useEffect(() => {
+    if (session) {
+      setTimeout(() => {
+        navigate('/');
+      }, 3000);
     }
-    
-    setLoading(false)
-  }
+  }, [session]);
 
-  return ( 
-   <div>
-     <Styles.Form 
-      onSubmit={handleSubmit(onSubmit)}>
-    {fields.map((item, i) => (
-      location.pathname === '/auth/login' && 
-      item.label === 'login' ? 
-      void 0 : (
-        <label style={{position: 'relative'}}>
-          <Field_1 
-            style={{width: width}} 
-            {...item} 
-            key={i} 
-            _id={i} 
-            register={{...register(item.label, item.registerOptions)}}
-            />      
-          <Styles.BevelSvg 
-            style={{display: !errors[item.label] ? 'none' : 'block'}} 
-            viewBox="0 0 400 80">
-
-            <polygon points="10 2, 390 2, 398 10, 398 70, 390 78, 10 78, 2 70, 2 10" />
-            <text 
-              x={200} 
-              y={46} 
-              fontSize={'1.37vw'} 
-              textAnchor="middle" 
-              fill="#c61a1a"
-              >
+  return (
+    <div>
+      <Styles.Form onSubmit={handleSubmit(onSubmit)}>
+        {fields.map((item, i) =>
+          location.pathname === '/auth/login' && item.label === 'login' ? (
+            void 0
+          ) : (
+            <label
+              style={{
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '1vw',
+              }}
+              key={i}>
+              <Field_1
+                style={{ width: width }}
+                {...item}
+                inputOptions={{ label: item.label, placeholder: item.placeholder }}
+                _id={i}
+                register={{ ...register(item.label, item.registerOptions) }}
+              />
+              <Message
+                color="#c61a1a"
+                style={{
+                  position: 'relative',
+                  left: 0,
+                  top: 0,
+                  display: !errors[item.label] ? 'none' : 'block',
+                }}>
                 {errors[item.label]?.message}
-            </text>
-          </Styles.BevelSvg>
-        </label>
-      )
-    ))}    
+              </Message>
+            </label>
+          ),
+        )}
 
-    {!loading ? <SignConfirm 
-      width={width} 
-      style={{marginTop: '1.5vw'}}/> : 'Loading...'}
+        {authError && (
+          <Styles.AuthError>Authorisation Error. Incorrect email or password</Styles.AuthError>
+        )}
 
-    <Link to="#">
-      <Styles.Span>forgot password</Styles.Span>
-    </Link>
+        {!loading ? <SignConfirm style={{ marginTop: '1.5vw', width: width }} /> : 'Loading...'}
 
-    {isSucces && location.pathname === '/auth/register' &&
-      <Styles.BevelSvg 
-        style={{left: '63vw', top: '-12vw'}} 
-        viewBox="0 0 400 80">
-      <polygon 
-        style={{stroke: "#c6b63f"}} 
-        points="10 2, 390 2, 398 10, 398 70, 390 78, 10 78, 2 70, 2 10" />
-      <text 
-        x={200} 
-        y={46} 
-        fontSize={'1.37vw'} 
-        textAnchor="middle" 
-        fill="#c6b63f"
-        >
-          Check your email
-      </text>
-    </Styles.BevelSvg> }
+        <Link to="#">
+          <Styles.Span>forgot password</Styles.Span>
+        </Link>
 
-  </Styles.Form>
-   </div>
-   );
-}
+        {isSucces && !authError && location.pathname === '/auth/register' && (
+          <Message color="#c6b63f">Check your email</Message>
+        )}
+
+        {isSucces && !authError && location.pathname === '/auth/login' && (
+          <Message color="#c6b63f">you authorized</Message>
+        )}
+      </Styles.Form>
+    </div>
+  );
+};

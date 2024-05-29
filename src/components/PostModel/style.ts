@@ -5,7 +5,7 @@ export const Styles = {
 
   mainGrid: css({
     display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
+    gridTemplateColumns: '65vw 27vw',
     rowGap: '1vw',
     columnGap: '1vw',
   }),
@@ -32,5 +32,6 @@ export const Styles = {
     background: '$dark3',
     clipPath: cssPathes.modelWindow,
   }),
+  
 }
 

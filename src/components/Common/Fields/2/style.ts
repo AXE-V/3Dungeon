@@ -1,12 +1,12 @@
 import { css, styled } from "../../../../../stitches.config";
 import { cssAnimations, cssPathes } from "../../../../style";
 
+
 export const Styles = {
 
  Inp: styled('input', {
-    position: 'absolute',
-    minWidth: '100%',
     minHeight: '100%',
+    position: 'absolute',
     opacity: .5,
     fontFamily: '$blak',
     fontSize: '1vw', 
@@ -18,7 +18,6 @@ export const Styles = {
     padding: '0 0 0 .5vw',
     position: 'relative',
     display: 'flex',
-    width: '100%',
     zIndex: 1,
     pointerEvents: 'none',
     overflow: 'auto',
@@ -31,7 +30,7 @@ export const Styles = {
   InpBorder: styled('div', {   
     display: 'flex',
     padding: '0vw 6.4vw 0vw .4vw',
-    width: '70%',
+    width: `70%`,
     position: 'relative',
     background: '$dark4',
     '&, &:after': {   
@@ -53,7 +52,7 @@ export const Styles = {
     justifyContent: 'center',
     alignItems: 'center',
     background: '$dark4',
-    width: '30%',
+    width: `30%`,
     opacity: .75,
     padding: '.6vw .4vw',
     userSelect: 'none',
@@ -63,9 +62,9 @@ export const Styles = {
   }),
 
   InpLabel: styled('label', {
-    width: '90%', 
+    width: '100%', 
     position: 'relative', 
-    left: '49%', 
+    left: '50%', 
     transform: 'translate(-50%, 0)'
   }),
 
@@ -92,28 +91,5 @@ export const Styles = {
     zIndex: 1,
     pointerEvents: 'none'
   }),
-
-  caret: css({
-    position: 'absolute',
-    zIndex: 1,
-    height: '60%',
-    width: '1px',
-    background: '$accent1',
-    opacity: .5,
-    top: '50%',
-    transform: 'translate(0, -50%)',
-    animation: `${cssAnimations.stilus} .8s linear infinite`,
-  }),
-
-  Overlapper: styled('span', {
-    position: 'absolute',
-    right: 0,
-    background: '$dark3',
-    width: '37.5%',
-    height: '100%',
-    clipPath: 'polygon(calc(0% + 1.25vw) 0%, 100% 0%, 100% 100%, 0 100%)',
-    transform: 'scale(.7)',
-    pointerEvents: 'none',
-    zIndex: 1
-  }),
+  
 }
