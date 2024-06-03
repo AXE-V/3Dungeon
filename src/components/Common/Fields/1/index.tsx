@@ -3,7 +3,14 @@ import { SVGComponent } from '../../../../interfaces/SVGComponent';
 import { styles } from './style';
 import { useField_1 } from './Hooks/useField_1';
 import { useDropFocus } from '../../../../hooks/useDropFocus';
-export const Field_1: FC<SVGComponent> = ({ style, type, _id, register, inputOptions }) => {
+import { IInput } from '../../../../interfaces/IInput';
+export const Field_1: FC<SVGComponent & IInput> = ({
+  style,
+  type,
+  _id,
+  register,
+  inputOptions,
+}) => {
   const { onChange, onClick, onMouseLeave, onMouseOver, valueInput, inpRef } = useField_1(_id);
 
   return (

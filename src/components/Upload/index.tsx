@@ -8,10 +8,41 @@ import { useNavigate } from 'react-router-dom';
 import { Session } from '@supabase/supabase-js';
 import { supabase } from '../../supabase';
 import { useAuth } from '../../providers/authProvider';
+import { useCustomDispatch } from '../../hooks/useCustomDispatch';
+import {
+  clearPostData,
+  // clearPostZip,
+  setPostAbout,
+  setPostCategory,
+  setPostFormat,
+  setPostGeometry,
+  setPostLicense,
+  setPostSize,
+  setPostTags,
+  setPostTitle,
+} from '../../redux/slices/data/post';
 
 export const Upload = () => {
-  const navigate = useNavigate();
   const { user } = useAuth();
+  const dispatch = useCustomDispatch();
+
+  useEffect(() => {
+    // const clearPostData = () => {
+    //   console.log('clearPostData');
+    //   // dispatch(setPostAbout(''));
+    //   // dispatch(setPostCategory(''));
+    //   // dispatch(setPostFormat(''));
+    //   // dispatch(setPostGeometry(''));
+    //   // dispatch(setPostLicense(''));
+    //   // dispatch(setPostSize(0));
+    //   // dispatch(setPostTags([]));
+    //   // dispatch(setPostTitle(''));
+    //   // dispatch(clearPostZip());
+    // };
+
+    dispatch(clearPostData());
+  }, []);
+
   return (
     <>
       <Styles.HeaderText>uploading file</Styles.HeaderText>

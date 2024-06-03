@@ -12,13 +12,13 @@ export const Select: FC<SVGComponent & ISelect> = ({ style, data, action, sliceV
   const dataKey = Object.keys(data ?? []);
   const dataValue = Object.values(data ?? []).flat();
 
-  // const initValue = () => {
-  //   // if (typeof sliceValue === 'string' && sliceValue.length > 0) {
-  //   return sliceValue;
-  //   // }
-  //   // return dataValue[0];
-  // };
-  const [selectedItem, setSelectedItem] = useState(sliceValue);
+  const initValue = () => {
+    if (typeof sliceValue === 'string' && sliceValue.length > 0) {
+      return sliceValue;
+    }
+    return dataValue[0];
+  };
+  const [selectedItem, setSelectedItem] = useState(initValue());
 
   return (
     <div style={{ position: 'relative', fontSize: '.9vw' }}>

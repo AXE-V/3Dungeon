@@ -7,32 +7,24 @@ import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { modelMeta } from '../../utils/modelMeta';
 import { useCustomDispatch } from '../../../../hooks/useCustomDispatch';
-import { setPostFormat, setPostGeometry } from '../../../../redux/slices/data/post';
-
-type UploadResponse = {
-  success: boolean;
-  message: string;
-  scene: {
-    path: string;
-    format: string;
-  };
-};
+import {
+  postSelectorFormat,
+  postSelectorScene,
+  setPostFormat,
+  setPostGeometry,
+} from '../../../../redux/slices/data/post';
 
 export const Model: FC<SVGComponent> = () => {
-  function getScene(): UploadResponse {
-    const scene = localStorage.getItem('scene');
-    return scene ? JSON.parse(scene) : null;
-  }
-
-  const sceneLS = getScene();
-  const gltf = useLoader(GLTFLoader, sceneLS.scene.path!);
+  const postSliceScene = useSelector(postSelectorScene);
+  const postSliceFormat = useSelector(postSelectorFormat);
+  const gltf = useLoader(GLTFLoader, postSliceScene);
   const dispatch = useCustomDispatch();
   const meta = useMemo(() => modelMeta(gltf), []);
 
   useEffect(() => {
-    dispatch(setPostFormat(sceneLS.scene.format));
+    dispatch(setPostFormat(postSliceFormat));
     dispatch(setPostGeometry(meta));
   }, []);
 
-  return <>{sceneLS && <primitive object={gltf.scene} scale={0.5} />}</>;
+  return <>{postSliceScene && <primitive object={gltf.scene} scale={0.5} />}</>;
 };

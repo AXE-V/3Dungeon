@@ -16,14 +16,18 @@ export const AuthProvider = ({ children }: any) => {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const setAuthData = async () => {
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession();
-      if (error) throw error;
-      setSession(session);
-      setUser(session?.user);
-      setLoading(false);
+      try {
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
+        if (error) throw error;
+        setSession(session);
+        setUser(session?.user);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
     };
 
     const { data: listener } = supabase.auth.onAuthStateChange((_, session) => {

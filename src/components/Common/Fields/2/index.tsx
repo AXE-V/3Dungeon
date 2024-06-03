@@ -37,7 +37,9 @@ export const Field_2: FC<SVGComponent & Basics & IInput & { cleared?: boolean }>
     function onChange<E extends SyntheticEvent<EventTarget>>(e: E) {
       setStateValue?.((e.target as HTMLInputElement).value);
       setValueInput((e.target as HTMLInputElement).value);
-      dispatch(action?.((e.target as HTMLInputElement).value));
+      if (action) {
+        dispatch(action?.(`${(e.target as HTMLInputElement).value}`));
+      }
     }
 
     return (

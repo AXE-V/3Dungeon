@@ -2,39 +2,21 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { supabase } from '../../../supabase';
 import { AuthError, Session } from '@supabase/supabase-js';
 import { RootState } from '../../store';
+import { Tables } from '../../../interfaces/DatabaseGeneratedTypes';
 
-type UserFields = {
-  image?: string;
-  skills?: string[];
-  links?: Link[];
-  location?: string;
-  about?: string;
-  likes?: {};
-  login: string;
+const initialState: Tables<'users'> = {
+  about: '',
+  image: '',
+  links: [],
+  location: '',
+  skills: [],
 };
-type Link = { name: string; url: string };
 
-export interface UserData {
-  data: UserFields;
-  session: Session | null;
-  error: AuthError | null;
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
-}
-
-const initialState: UserData = {
-  data: {
-    image: '',
-    skills: [],
-    links: [],
-    location: '',
-    about: '',
-    likes: {},
-    login: 'user',
-  },
-  session: null,
-  error: null,
-  status: 'idle',
-};
+export const getUserDataByID = createAsyncThunk('user/getUserDataByID', async (userId: string) => {
+  const { data, error } = await supabase.from('users').select().eq('id', userId).limit(1).single();
+  if (error) throw error;
+  return data;
+});
 
 const userSlice = createSlice({
   name: 'user',

@@ -7,6 +7,7 @@ export const createPost = async (params: TablesInsert<'models'>) => {
   if (error) {
     console.log(error);
   }
+  console.log(data);
   return { data, error };
 };
 

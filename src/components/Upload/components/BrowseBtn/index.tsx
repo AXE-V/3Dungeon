@@ -4,7 +4,19 @@ import { styleController } from '../../../../utils/styleController';
 import axios from '../../../../redux/axios.ts';
 import { useNavigate } from 'react-router-dom';
 import { useCustomDispatch } from '../../../../hooks/useCustomDispatch.ts';
-import { setPostSize } from '../../../../redux/slices/data/post.ts';
+import {
+  postSelector,
+  setPostAbout,
+  setPostCategory,
+  setPostFormat,
+  setPostGeometry,
+  setPostLicense,
+  setPostSize,
+  setPostTags,
+  setPostTitle,
+  unzipPostData,
+} from '../../../../redux/slices/data/post.ts';
+import { useSelector } from 'react-redux';
 
 export const BrowseBtn: FC<SVGComponent> = ({ style, user }) => {
   const navigate = useNavigate();
@@ -25,24 +37,18 @@ export const BrowseBtn: FC<SVGComponent> = ({ style, user }) => {
       return;
     }
 
-    dispatch(setPostSize(+(file.size / 8 / 1024 / 1024).toFixed(2)));
-
-    const formData = new FormData();
-    formData.append('archive', file);
-
-    try {
-      const { data } = await axios.post('/upload', formData);
-
-      if (data.success) {
-        localStorage.setItem('scene', JSON.stringify(data));
-        console.log(data.message);
+    const unzipData = async () => {
+      try {
+        const dispatchedData = await dispatch(unzipPostData(file));
+        console.log(dispatchedData.payload);
         navigate(`/user/${user?.id}/create-post`);
-      } else {
-        console.error(data.message);
+      } catch (error) {
+        console.log(error);
       }
-    } catch (err) {
-      console.error('Ошибка при отправке запроса:', err);
-    }
+    };
+
+    dispatch(setPostSize(+(file.size / 8 / 1024 / 1024).toFixed(2)));
+    unzipData();
   };
 
   return (

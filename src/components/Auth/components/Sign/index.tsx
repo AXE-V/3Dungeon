@@ -2,8 +2,14 @@ import { FC } from 'react';
 import { SVGComponent } from '../../../../interfaces/SVGComponent';
 import { styles } from './style';
 import { useSignBtn } from './hooks/useSignBtn';
+import { IInput } from '../../../../interfaces/IInput';
 
-export const Sign: FC<SVGComponent & { path: string }> = ({ style, inputOptions, _id, path }) => {
+export const Sign: FC<SVGComponent & IInput & { path: string }> = ({
+  style,
+  inputOptions,
+  _id,
+  path,
+}) => {
   const { onClick, onMouseLeave, onMouseOver, signRef } = useSignBtn(_id, path);
 
   return (

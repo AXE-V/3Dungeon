@@ -6,15 +6,8 @@ import { Session } from '@supabase/supabase-js';
 
 export const BtnUpload: FC<SVGComponent> = ({ style, session }) => {
   const navigate = useNavigate();
-  const lskey = 'edit_post';
+
   function onClick() {
-    console.log('ls removed');
-    localStorage.removeItem(`select-category-${lskey}`);
-    localStorage.removeItem(`select-license-${lskey}`);
-    localStorage.removeItem(`field-${lskey}`);
-    localStorage.removeItem(`tags-${lskey}`);
-    localStorage.removeItem(`smde_model-description`);
-    localStorage.removeItem(`scene-path`);
     session ? navigate('/upload') : navigate('/auth/login');
   }
 

@@ -1,78 +1,110 @@
-// @ts-nocheck
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+// //@ts-nocheck
+import {
+  Action,
+  ThunkDispatch,
+  createAsyncThunk,
+  createSlice,
+  isRejectedWithValue,
+} from '@reduxjs/toolkit';
 import { RootState } from '../../store';
 import axios from '../../axios';
 import { supabase } from '../../../supabase';
-import { Database, Json, Tables, TablesInsert } from '../../../interfaces/db';
+import {
+  Database,
+  Json,
+  Tables,
+  TablesInsert,
+  TablesUpdate,
+} from '../../../interfaces/DatabaseGeneratedTypes';
+import { PostgrestError, User } from '@supabase/supabase-js';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../providers/authProvider';
 
-export type TableModels = {
-  about?: string;
-  category?: string;
-  format?: string;
-  geometry?: Json;
-  license?: string;
-  rating?: number | null;
-  size?: number;
-  tags?: string[];
-  title?: string;
-  user_id?: string;
-  view_count?: number | null;
-  id?: string;
-  created_at?: string;
-  //
-} & Debug;
-
-type Debug = {
-  error?: PostgrestError | null;
+type Response = {
+  success?: true;
+  message?: string;
 };
 
-const initialState: TableModels = {
-  title: '',
+type UnzipResponse = {
+  zip_name?: string;
+  scene?: {
+    path: string;
+    format: string;
+  };
+} & Response;
+
+type ZipResponse = { count: number | null } & Response;
+
+// type AdditionalData = {
+//   zip?: UnzipResponse | null;
+// };
+
+// export type InitialState = Tables<'models'> & AdditionalData;
+
+const initialState: Tables<'models'> = {
   about: '',
-  category: 'all category',
-  format: '.gltf',
-  geometry: JSON.stringify(''),
-  license: 'cc by',
-  rating: 0,
-  size: 0,
+  category: '',
+  format: '',
+  geometry: '',
+  license: '',
   tags: [],
+  title: '',
   user_id: '',
-  // не обязательные, авто
-  // view_count: 0,
-  // id: '',
-  // created_at: '',
+  zip_name: '',
+  scene: '',
+};
+
+type Editpost = {
+  data: TablesInsert<'models'> | TablesUpdate<'models'>;
+  zip_name: string;
+  uid: string | undefined;
 };
 
 // обновление и вставка поста
-export const editPost = createAsyncThunk('post-model/createPost', async (params: TableModels) => {
-  const { data, error } = await supabase.from('models').upsert(params);
-  if (error) {
-    console.log(error);
-  }
-  console.log(data);
-  return { data, error };
-});
-// export const editPost = createAsyncThunk(
-//   'post-model/createPost',
-//   async (params: TablesInsert<'models'>) => {
-//     const { data, error } = await supabase.from('models').upsert(params);
-//     if (error) {
-//       console.log(error);
-//     }
-//     return { data, error };
-//   },
-// );
+export const editPost = createAsyncThunk(
+  'post-model/editPost',
+  async ({ data, zip_name, uid }: Editpost) => {
+    const { data: zip } = await axios.post<ZipResponse>('/zip', { zip_name, uid, data });
 
-// получение поста
-export const getPost = createAsyncThunk('post-model/createPost', async () => {
-  const { data, error } = await supabase.from('models').select();
-  if (error) {
-    console.log(error);
-  }
-  console.log(data);
+    return {
+      zip,
+    };
+  },
+);
 
-  return { data, error };
+// распаковка выбранного архива
+export const unzipPostData = createAsyncThunk('post-model/unzipPostData', async (file: File) => {
+  const formData = new FormData();
+  formData.append('zip', file);
+  const { data } = await axios.post<UnzipResponse>('/unzip', formData);
+
+  if (!data.success) throw data.message;
+  return data;
 });
+
+// получение всех постов пользователя
+export const getUserPosts = createAsyncThunk('post-model/getUserPosts', async (userId: string) => {
+  const { data, error } = await supabase
+    .from('models')
+    .select()
+    .eq('user_id', `${userId}`)
+    .limit(12);
+  if (error) throw error;
+  return { data };
+});
+
+type GetAllZipByUserID = {
+  zip_name: string;
+  uid: string;
+};
+
+export const getAllZipByUserID = createAsyncThunk(
+  'post/getAllZipByUserID',
+  async ({ uid, zip_name }: GetAllZipByUserID) => {
+    const { data } = supabase.storage.from('models').getPublicUrl(`${uid}/${zip_name}`);
+    return data;
+  },
+);
 
 const postSlice = createSlice({
   name: 'post-model',
@@ -108,25 +140,38 @@ const postSlice = createSlice({
     setPostUser(state, { payload }) {
       state.user_id = payload;
     },
+    // clearPostZip(state) {
+    //   state.zip = null;
+    // },
+    clearPostData(state) {
+      state.about = '';
+      state.category = '';
+      state.format = '';
+      state.geometry = '';
+      state.license = '';
+      state.tags = [];
+      state.title = '';
+      state.user_id = '';
+      state.zip_name = '';
+      state.scene = '';
+    },
   },
   extraReducers: (builder) => {
-    builder.addCase(editPost.pending, (state) => {
-      state = null;
-      state.error = null;
+    builder.addCase(unzipPostData.fulfilled, (state, { payload }) => {
+      state.zip_name = payload.zip_name!;
+      state.scene = payload.scene?.path!;
+      state.format = payload.scene?.format!;
     });
-    builder.addCase(editPost.fulfilled, (state, { payload }) => {
-      state = payload.data;
-      state.error = payload.error;
-    });
-    builder.addCase(editPost.rejected, (state, { payload }) => {
-      state = payload.data;
-      state.error = payload.error;
-    });
-    // builder.addCase(getPost.fulfilled, (state, { payload }) => {});
+    // builder.addCase(unzipPostData.fulfilled, (state, { payload }) => {
+    //   state.zip = payload;
+    // });
   },
 });
 
 export const postSelector = (state: RootState) => state.postR;
+// export const postSelectorScene = (state: RootState) => state.postR.zip?.scene;
+export const postSelectorScene = (state: RootState) => state.postR.scene;
+export const postSelectorFormat = (state: RootState) => state.postR.format;
 export const {
   setPostTitle,
   setPostAbout,
@@ -138,5 +183,7 @@ export const {
   setPostSize,
   setPostTags,
   setPostUser,
+  // clearPostZip,
+  clearPostData,
 } = postSlice.actions;
 export const postR = postSlice.reducer;

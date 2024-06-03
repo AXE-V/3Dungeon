@@ -14,7 +14,17 @@ export const FormRegLog = () => {
   const fields = getFieldsOptions();
   const navigate = useNavigate();
   const { session } = useAuth();
-  const { handleSubmit, innerSubmit, register, errors, authError, loading, isSucces } = useRegLog();
+  const {
+    handleSubmit,
+    innerSubmit,
+    register,
+    errors,
+    authError,
+    setAuthError,
+    loading,
+    isSucces,
+    setSucces,
+  } = useRegLog();
 
   const onSubmit: SubmitHandler<FormInputs> = (params) => {
     innerSubmit(params);
@@ -24,7 +34,7 @@ export const FormRegLog = () => {
     if (session) {
       setTimeout(() => {
         navigate('/');
-      }, 3000);
+      }, 2000);
     }
   }, [session]);
 

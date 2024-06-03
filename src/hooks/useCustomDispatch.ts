@@ -1,24 +1,12 @@
 import { useDispatch } from 'react-redux';
 import { AppDispath } from '../redux/store';
-import { Action } from '@reduxjs/toolkit';
+import { Action, ThunkDispatch } from '@reduxjs/toolkit';
 
-// type DispatchFunction = {f: Action | ((payload: any) => Action)}
 // export const useCustomDispatch = () => {
 //   const dispatch = useDispatch<AppDispath>();
-//   return (f: DispatchFunction) => {
-
-//     dispatch(f)
+//   return (f: Action) => {
+//     dispatch(f);
 //   };
 // };
 
-type DispatchFunction = Action | ((payload: any) => Action);
-export const useCustomDispatch = () => {
-  const dispatch = useDispatch<AppDispath>();
-  return (f: DispatchFunction) => {
-    if (typeof f == 'function') {
-      dispatch(f({}));
-    } else {
-      dispatch(f);
-    }
-  };
-};
+export const useCustomDispatch = useDispatch<AppDispath>;
