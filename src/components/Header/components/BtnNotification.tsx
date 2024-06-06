@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 
 export const BtnNotification: FC<SVGComponent> = ({ style }) => {
   const navigate = useNavigate();
-  // const session = getUserSessionData();
 
   function onClick() {
     // session ? navigate('/notifications') : navigate('/auth/login');

@@ -3,17 +3,15 @@ import { SVGComponent } from '../../../../interfaces/SVGComponent';
 import { styleController } from '../../../../utils/styleController';
 import Menu from './Menu';
 import { useNavigate } from 'react-router-dom';
-import { Session } from '@supabase/supabase-js';
-import { supabase } from '../../../../supabase';
+import { useAuth } from '../../../../providers/authProvider';
 
-export const BtnUser: FC<SVGComponent> = ({ style, session }) => {
+export const BtnUser: FC<SVGComponent> = ({ style }) => {
   const [visible, setvisible] = useState(false);
   const navigate = useNavigate();
+  const { session } = useAuth();
 
   function onClick() {
-    console.log(session);
-    session ? navigate(`/user/${session?.user.id}`) : navigate('/auth/login');
-    session ? console.log('1') : console.log('2');
+    session ? navigate(`/user/${session?.user.user_metadata.login}`) : navigate('/auth/login');
   }
 
   function onMouseLeave<E extends SyntheticEvent<EventTarget>>(e: E) {
@@ -60,7 +58,7 @@ export const BtnUser: FC<SVGComponent> = ({ style, session }) => {
         />
       </svg>
 
-      {visible && <Menu session={session} />}
+      {visible && <Menu />}
     </div>
   );
 };

@@ -19,11 +19,40 @@ import {
 import { PostgrestError, User } from '@supabase/supabase-js';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../providers/authProvider';
+import { path } from '../../../utils/path';
 
 type Response = {
   success?: true;
   message?: string;
 };
+
+const initialState: Tables<'models'> = {
+  about: '',
+  category: '',
+  format: '',
+  geometry: '',
+  license: '',
+  size: 0,
+  tags: [],
+  title: '',
+  user_id: '',
+  zip_name: '',
+};
+
+type Editpost = {
+  postData: TablesInsert<'models'> | TablesUpdate<'models'>;
+  zip_name: string;
+  modelData: object;
+  uid: string | undefined;
+};
+
+type ZipResponse = { count: number | null } & Response;
+
+// обновление и вставка поста, вставка файлов
+export const editPost = createAsyncThunk('post-model/editPost', async (props: Editpost) => {
+  const { data } = await axios.post<ZipResponse>('/zip', props);
+  return data;
+});
 
 type UnzipResponse = {
   zip_name?: string;
@@ -32,45 +61,6 @@ type UnzipResponse = {
     format: string;
   };
 } & Response;
-
-type ZipResponse = { count: number | null } & Response;
-
-// type AdditionalData = {
-//   zip?: UnzipResponse | null;
-// };
-
-// export type InitialState = Tables<'models'> & AdditionalData;
-
-const initialState: Tables<'models'> = {
-  about: '',
-  category: '',
-  format: '',
-  geometry: '',
-  license: '',
-  tags: [],
-  title: '',
-  user_id: '',
-  zip_name: '',
-  scene: '',
-};
-
-type Editpost = {
-  data: TablesInsert<'models'> | TablesUpdate<'models'>;
-  zip_name: string;
-  uid: string | undefined;
-};
-
-// обновление и вставка поста
-export const editPost = createAsyncThunk(
-  'post-model/editPost',
-  async ({ data, zip_name, uid }: Editpost) => {
-    const { data: zip } = await axios.post<ZipResponse>('/zip', { zip_name, uid, data });
-
-    return {
-      zip,
-    };
-  },
-);
 
 // распаковка выбранного архива
 export const unzipPostData = createAsyncThunk('post-model/unzipPostData', async (file: File) => {
@@ -82,16 +72,65 @@ export const unzipPostData = createAsyncThunk('post-model/unzipPostData', async 
   return data;
 });
 
+type GenerateGLTFJSXResponse = {
+  success: boolean;
+  message: string;
+};
+type GenerateGLTFJSX = {
+  scene: string;
+  outputBasename: string;
+};
+// генерация файлов модели
+export const generateGLTFJSX = createAsyncThunk(
+  'post-model/generateGLTFJSX',
+  async ({ scene, outputBasename }: GenerateGLTFJSX) => {
+    const { data } = await axios.post<GenerateGLTFJSXResponse>('/generate-gltf-jsx', {
+      scene,
+      outputBasename,
+    });
+    return data;
+  },
+);
+
+type GetUserPosts = {
+  userId: string;
+  // zip_name: string;
+};
 // получение всех постов пользователя
-export const getUserPosts = createAsyncThunk('post-model/getUserPosts', async (userId: string) => {
-  const { data, error } = await supabase
-    .from('models')
-    .select()
-    .eq('user_id', `${userId}`)
-    .limit(12);
-  if (error) throw error;
-  return { data };
-});
+export const getUserPosts = createAsyncThunk(
+  'post-model/getUserPosts',
+  async ({ userId }: GetUserPosts) => {
+    const { getName } = path;
+    let zipNames: string[] = [];
+
+    const { data: postsData, error: postError } = await supabase
+      .from('models')
+      .select()
+      .eq('user_id', `${userId}`)
+      .limit(12);
+
+    (postsData as Tables<'models'>[]).forEach((post) => zipNames.push(getName(post.zip_name)));
+
+    const getModelsData = (): any => {
+      zipNames.forEach((zipName) => {
+        const modelsData: any[] = [];
+        const getData = async () => {
+          const { data: modelData, error: modelError } = await supabase.storage
+            .from('models')
+            .list(`${userId}/${zipName}`);
+          if (modelError) throw modelError;
+          modelsData.push(modelData);
+        };
+        getData();
+        return modelsData;
+      });
+    };
+    const modelsData = getModelsData();
+
+    if (postError) throw 'error retrieving post data';
+    return { postsData: postsData as Tables<'models'>[], modelsData, zipNames };
+  },
+);
 
 type GetAllZipByUserID = {
   zip_name: string;
@@ -101,8 +140,17 @@ type GetAllZipByUserID = {
 export const getAllZipByUserID = createAsyncThunk(
   'post/getAllZipByUserID',
   async ({ uid, zip_name }: GetAllZipByUserID) => {
-    const { data } = supabase.storage.from('models').getPublicUrl(`${uid}/${zip_name}`);
-    return data;
+    const { getName } = path;
+    const { data: postData } = supabase.storage
+      .from('models')
+      .getPublicUrl(`${uid}/${getName(zip_name)}/scene-transformed.glb`);
+    const { data: modelData } = supabase.storage
+      .from('models')
+      .getPublicUrl(`${uid}/${getName(zip_name)}/model.tsx`);
+    const { data: zip } = supabase.storage
+      .from('models')
+      .getPublicUrl(`${uid}/${getName(zip_name)}/${zip_name}`);
+    return { zip, postData, modelData };
   },
 );
 
@@ -140,9 +188,6 @@ const postSlice = createSlice({
     setPostUser(state, { payload }) {
       state.user_id = payload;
     },
-    // clearPostZip(state) {
-    //   state.zip = null;
-    // },
     clearPostData(state) {
       state.about = '';
       state.category = '';
@@ -159,19 +204,14 @@ const postSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(unzipPostData.fulfilled, (state, { payload }) => {
       state.zip_name = payload.zip_name!;
-      state.scene = payload.scene?.path!;
       state.format = payload.scene?.format!;
     });
-    // builder.addCase(unzipPostData.fulfilled, (state, { payload }) => {
-    //   state.zip = payload;
-    // });
   },
 });
 
 export const postSelector = (state: RootState) => state.postR;
-// export const postSelectorScene = (state: RootState) => state.postR.zip?.scene;
-export const postSelectorScene = (state: RootState) => state.postR.scene;
 export const postSelectorFormat = (state: RootState) => state.postR.format;
+export const postSelectorZipName = (state: RootState) => state.postR.zip_name;
 export const {
   setPostTitle,
   setPostAbout,

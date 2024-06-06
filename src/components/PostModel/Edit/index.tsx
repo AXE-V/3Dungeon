@@ -49,13 +49,22 @@ export const EditPostModel = () => {
     dispatch(setPostUser(user?.id));
   }, [user]);
 
-  // 'https://guflskihwrcehwjtxlab.supabase.co/storage/v1/object/public/models/20250b4a-bb69-4cce-ae6a-29fe0167c429/yf-23_black_widow_ii_-_fighter_jet_-_free.zip?t=2024-06-02T12%3A10%3A29.314Z'
-
-  const onClick = () => {
+  const onClick = async () => {
     try {
       setLoading(true);
       setPostSaved((prev) => ({ ...prev, saved: false, error: false }));
-      const preparedData: Tables<'models'> = {
+
+      const pathTSX = '/model.tsx';
+      const dataTSX = import(pathTSX);
+      const pathGLB = '/scene-transformed.glb';
+      const dataGLB = import(pathGLB);
+
+      const modelData = {
+        glb: dataGLB,
+        tsx: dataTSX,
+      };
+
+      const postData: Tables<'models'> = {
         about: postSlice.about,
         category: postSlice.category,
         format: postSlice.format,
@@ -66,49 +75,38 @@ export const EditPostModel = () => {
         title: postSlice.title,
         user_id: postSlice.user_id,
         zip_name: postSlice.zip_name,
-        scene: postSlice.scene,
       };
 
-      const savePostData = async () => {
-        try {
-          const dispatchedData = await dispatch(
-            editPost({ data: preparedData, zip_name: `${postSlice.zip_name}`, uid: user?.id }),
-          ).unwrap();
-          // const dispatchedData = await dispatch(
-          //   editPost({ data: preparedData, zipName: `${postSlice.zip?.zipName}`, uid: user?.id }),
-          // ).unwrap();
+      const dispatchedData = await dispatch(
+        editPost({
+          postData,
+          modelData,
+          zip_name: `${postSlice.zip_name}`,
+          uid: user?.id,
+        }),
+      ).unwrap();
 
-          console.log(dispatchedData);
+      if (!dispatchedData.success) throw dispatchedData.message;
 
-          if (!dispatchedData.zip.success) throw dispatchedData.zip.message;
+      if (dispatchedData.count === 1) {
+        setOperation('insert');
+      } else {
+        setOperation('update');
+      }
 
-          if (dispatchedData.zip.count === 1) {
-            setOperation('insert');
-          } else {
-            setOperation('update');
-          }
-
-          console.log(dispatchedData);
-
-          setLoading(() => false);
-          setPostSaved((prev) => ({ ...prev, saved: true, error: false }));
-          setTimeout(() => {
-            setPostSaved((prev) => ({ ...prev, saved: false, error: false }));
-          }, 3000);
-        } catch (error) {
-          setLoading(() => false);
-          console.log(error);
-          setPostSaved((prev) => ({ ...prev, error: true, saved: false }));
-
-          setTimeout(() => {
-            setPostSaved((prev) => ({ ...prev, error: false, saved: false }));
-          }, 3000);
-        }
-      };
-
-      savePostData();
+      setLoading(() => false);
+      setPostSaved((prev) => ({ ...prev, saved: true, error: false }));
+      setTimeout(() => {
+        setPostSaved((prev) => ({ ...prev, saved: false, error: false }));
+      }, 3000);
     } catch (error) {
+      setLoading(() => false);
       console.log(error);
+      setPostSaved((prev) => ({ ...prev, error: true, saved: false }));
+
+      setTimeout(() => {
+        setPostSaved((prev) => ({ ...prev, error: false, saved: false }));
+      }, 3000);
     }
   };
 

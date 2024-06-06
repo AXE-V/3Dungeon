@@ -4,6 +4,7 @@ import { Styles } from './style';
 import { Scrollbar } from '../../../Common/Scroll';
 import { Card_2 } from '../../../Common/Cards/2';
 import BtnPay from './components/BtnPay';
+import { imgs } from '../../../Catalog/sample';
 
 export const CartPanel: FC<SVGComponent> = ({ style }) => {
   return (
@@ -29,8 +30,8 @@ export const CartPanel: FC<SVGComponent> = ({ style }) => {
               alignItems: 'center',
               rowGap: '1vw',
             }}>
-            {[...new Array(15)].map((_, i) => (
-              <Card_2 key={i} style={{ width: '85%' }} />
+            {imgs.map((img, i) => (
+              <Card_2 key={i} img={img} order={i + 1} style={{ width: '85%' }} />
             ))}
           </div>
         </Scrollbar>

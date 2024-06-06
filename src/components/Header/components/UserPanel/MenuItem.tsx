@@ -4,8 +4,11 @@ import { styleController } from '../../../../utils/styleController';
 import { Styles as S } from './style';
 import { supabase } from '../../../../supabase';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../../providers/authProvider';
 
-export const MenuItem: FC<SVGComponent & { label: string }> = ({ style, label, to, session }) => {
+export const MenuItem: FC<SVGComponent & { label: string }> = ({ style, label, to }) => {
+  const { session } = useAuth();
+
   const refLi = useRef(null);
   const [originalStyle, setOriginalStyle] = useState('');
   const navigate = useNavigate();

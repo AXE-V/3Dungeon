@@ -12,10 +12,10 @@ export const modelMeta = (model: GLTF & ObjectMap) => {
       const obj = <Mesh>object;
       if (obj.isMesh) {
         const { geometry } = obj;
-        polygons += (geometry.index?.array.length ?? 0) / 3;
+        polygons += geometry.index?.array.length! / 3;
         vertices += geometry.attributes.position.array.length / 3;
         // ребра
-        edges += ((geometry.index?.array.length ?? 0) / 3) * 2;
+        edges += (geometry.index?.array.length! / 3) * 2;
       }
     });
 

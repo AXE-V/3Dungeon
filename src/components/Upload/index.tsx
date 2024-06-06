@@ -3,49 +3,26 @@ import { Logo } from '../Common/Logo';
 import { BgUpload } from './components/Bg';
 import { BrowseBtn } from './components/BrowseBtn';
 import { ExtiBtn } from './components/ExitBtn';
-import { Styles } from './components/style';
+import { Styles as S } from './components/style';
 import { useNavigate } from 'react-router-dom';
 import { Session } from '@supabase/supabase-js';
 import { supabase } from '../../supabase';
 import { useAuth } from '../../providers/authProvider';
 import { useCustomDispatch } from '../../hooks/useCustomDispatch';
-import {
-  clearPostData,
-  // clearPostZip,
-  setPostAbout,
-  setPostCategory,
-  setPostFormat,
-  setPostGeometry,
-  setPostLicense,
-  setPostSize,
-  setPostTags,
-  setPostTitle,
-} from '../../redux/slices/data/post';
+import { clearPostData } from '../../redux/slices/data/post';
 
 export const Upload = () => {
   const { user } = useAuth();
   const dispatch = useCustomDispatch();
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
-    // const clearPostData = () => {
-    //   console.log('clearPostData');
-    //   // dispatch(setPostAbout(''));
-    //   // dispatch(setPostCategory(''));
-    //   // dispatch(setPostFormat(''));
-    //   // dispatch(setPostGeometry(''));
-    //   // dispatch(setPostLicense(''));
-    //   // dispatch(setPostSize(0));
-    //   // dispatch(setPostTags([]));
-    //   // dispatch(setPostTitle(''));
-    //   // dispatch(clearPostZip());
-    // };
-
     dispatch(clearPostData());
   }, []);
 
   return (
     <>
-      <Styles.HeaderText>uploading file</Styles.HeaderText>
+      <S.HeaderText>uploading file</S.HeaderText>
       <Logo
         style={{
           position: 'absolute',
@@ -57,17 +34,28 @@ export const Upload = () => {
         }}
       />
       <ExtiBtn />
-      <Styles.H1>place your model</Styles.H1>
-      <Styles.Info1>
-        <Styles.Info2>
+      <p
+        style={{
+          color: '#c6b63f',
+          position: 'absolute',
+          top: '26vw',
+          transform: 'translate(-50%, -50%)',
+        }}>
+        {/* prepare */}
+        {message}
+      </p>
+      <S.H1>place your model</S.H1>
+      <S.Info1>
+        <S.Info2>
           <p style={{ opacity: 0.75 }}>Drag and drop or</p>
           <BrowseBtn
+            setMessage={setMessage}
             user={user}
             style={{ width: '7vw', marginTop: '.4vw', position: 'relative', zIndex: 0 }}
           />
-        </Styles.Info2>
+        </S.Info2>
         <p style={{ opacity: 0.5, marginTop: '3vw' }}>FBX, OBJ, DAE, BLEND and STL supported</p>
-      </Styles.Info1>
+      </S.Info1>
       <BgUpload />
     </>
   );

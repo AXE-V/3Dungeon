@@ -36,8 +36,7 @@ export type Database = {
           id?: string;
           license: string;
           rating?: number | null;
-          scene: string;
-          size?: number | null;
+          size: number;
           tags: string[];
           title: string;
           user_id: string;
@@ -48,13 +47,13 @@ export type Database = {
           about: string;
           category: string;
           created_at?: string;
+          data: Json;
           format: string;
           geometry: Json;
           id?: string;
           license: string;
           rating?: number | null;
-          scene: string;
-          size?: number | null;
+          size: number;
           tags: string[];
           title: string;
           user_id: string;
@@ -65,12 +64,12 @@ export type Database = {
           about?: string;
           category?: string;
           created_at?: string;
+          data?: Json;
           format?: string;
           geometry?: Json;
           id?: string;
           license?: string;
           rating?: number | null;
-          scene?: string;
           size?: number | null;
           tags?: string[];
           title?: string;
@@ -91,12 +90,12 @@ export type Database = {
       users: {
         Row: {
           about: string | null;
-          created_at?: string;
-          id?: string;
+          created_at: string;
+          id: string;
           image: string | null;
           links: Json | null;
           location: string | null;
-          login?: string;
+          login: string;
           skills: string[] | null;
         };
         Insert: {

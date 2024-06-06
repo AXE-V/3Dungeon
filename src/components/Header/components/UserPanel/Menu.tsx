@@ -2,20 +2,22 @@ import { FC } from 'react';
 import { MenuItem } from './MenuItem';
 import { Styles as S } from './style';
 import { SVGComponent } from '../../../../interfaces/SVGComponent';
-import { Message } from '../../../Common/Message';
+import { useAuth } from '../../../../providers/authProvider';
 
-export const Menu: FC<SVGComponent> = ({ style, session }) => {
-  const uid = session?.user.id;
+export const Menu: FC<SVGComponent> = ({ style }) => {
+  const { user } = useAuth();
+  const login = user?.user_metadata.login;
+
   return (
     <>
       <div style={{ position: 'absolute', right: 0, ...style }}>
         <div style={{ height: '1vw', width: '11vw' }} />
         <S.Menu>
           <S.MenuSection>
-            <MenuItem session={session} label={'models'} to={`/user/${uid}/3d-models`} />
-            <MenuItem session={session} label={'likes'} to={`/user/${uid}/likes`} />
-            <MenuItem session={session} label={'account'} to={`/user/${uid}`} />
-            <MenuItem session={session} label={'login'} />
+            <MenuItem label={'models'} to={`/user/${login}/3d-models`} />
+            <MenuItem label={'likes'} to={`/user/${login}/likes`} />
+            <MenuItem label={'account'} to={`/user/${login}`} />
+            <MenuItem label={'login'} />
           </S.MenuSection>
         </S.Menu>
       </div>

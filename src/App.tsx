@@ -10,10 +10,8 @@ import Auth from './components/Auth';
 import { User } from './components/User';
 import { Upload } from './components/Upload';
 import { EditPostModel } from './components/PostModel/Edit';
-import { AuthProvider } from './providers/authProvider';
-import { Provider } from 'react-redux';
-import store from './redux/store';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { NotFound } from './components/NotFound';
 
 function App() {
   globalStyles();
@@ -22,13 +20,14 @@ function App() {
     <>
       <Router>
         <Routes>
+          <Route path="*" element={<NotFound />} />
           <Route path="/" element={<MainLayout />}>
             <Route path="/" element={<Catalog />} />
             <Route path="/auth/register" element={<Auth />} />
             <Route path="/auth/login" element={<Auth />} />
-            <Route path="/user/:id">
+            <Route path="/user/:login">
               <Route
-                path="/user/:id"
+                path="/user/:login"
                 element={
                   <ProtectedRoute>
                     <User />
@@ -36,7 +35,7 @@ function App() {
                 }
               />
               <Route
-                path="/user/:id/likes"
+                path="/user/:login/likes"
                 element={
                   <ProtectedRoute>
                     <Catalog />
@@ -44,24 +43,16 @@ function App() {
                 }
               />
               <Route
-                path="/user/:id/likes/:id"
+                path="/user/:login/likes/:id"
                 element={
                   <ProtectedRoute>
                     <EditPostModel />
                   </ProtectedRoute>
                 }
               />
-              <Route path="/user/:id/3d-models" element={<Catalog />} />
+              <Route path="/user/:login/3d-models" element={<Catalog />} />
               <Route
-                path="/user/:id/3d-models/:id"
-                element={
-                  <ProtectedRoute>
-                    <EditPostModel />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/user/:id/create-post"
+                path="/user/:login/3d-models/:id"
                 element={
                   <ProtectedRoute>
                     <EditPostModel />
@@ -69,7 +60,15 @@ function App() {
                 }
               />
               <Route
-                path="/user/:id/edit-post/:id"
+                path="/user/:login/create-post"
+                element={
+                  <ProtectedRoute>
+                    <EditPostModel />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/user/:login/edit-post/:id"
                 element={
                   <ProtectedRoute>
                     <EditPostModel />

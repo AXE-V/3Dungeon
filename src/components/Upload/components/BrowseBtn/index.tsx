@@ -5,6 +5,7 @@ import axios from '../../../../redux/axios.ts';
 import { useNavigate } from 'react-router-dom';
 import { useCustomDispatch } from '../../../../hooks/useCustomDispatch.ts';
 import {
+  generateGLTFJSX,
   postSelector,
   setPostAbout,
   setPostCategory,
@@ -16,9 +17,12 @@ import {
   setPostTitle,
   unzipPostData,
 } from '../../../../redux/slices/data/post.ts';
-import { useSelector } from 'react-redux';
 
-export const BrowseBtn: FC<SVGComponent> = ({ style, user }) => {
+type MessageProps = {
+  message?: string;
+  setMessage?: (val: string) => void;
+};
+export const BrowseBtn: FC<SVGComponent & MessageProps> = ({ style, user, setMessage }) => {
   const navigate = useNavigate();
   const dispatch = useCustomDispatch();
 
@@ -37,18 +41,24 @@ export const BrowseBtn: FC<SVGComponent> = ({ style, user }) => {
       return;
     }
 
-    const unzipData = async () => {
-      try {
-        const dispatchedData = await dispatch(unzipPostData(file));
-        console.log(dispatchedData.payload);
-        navigate(`/user/${user?.id}/create-post`);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    setMessage?.('unpacking the archive');
+    const unzippedData = await dispatch(unzipPostData(file)).unwrap();
+    console.log(unzippedData);
 
     dispatch(setPostSize(+(file.size / 8 / 1024 / 1024).toFixed(2)));
-    unzipData();
+
+    const sceneBasename = getBasename(`${unzippedData.scene?.path}`);
+
+    setMessage?.('generating model data');
+    const gltfjsx = await dispatch(
+      generateGLTFJSX({ scene: sceneBasename, outputBasename: 'model.tsx' }),
+    ).unwrap();
+    console.log(gltfjsx);
+
+    setMessage?.('');
+    if (gltfjsx.success) {
+      navigate(`/user/${user?.id}/create-post`);
+    }
   };
 
   return (
