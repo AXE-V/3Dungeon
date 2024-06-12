@@ -37,7 +37,9 @@ const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: { ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER] },
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
     }),
 });
 
@@ -48,71 +50,3 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispath = typeof store.dispatch;
 
 export default store;
-
-// // 4
-// // Component1.js
-// import React from 'react';
-// import { useDispatch } from 'react-redux';
-// import { updateComponent1Data } from './component1Reducer';
-
-// const Component1 = () => {
-//   const dispatch = useDispatch();
-
-//   const handleDataChange = (newData) => {
-//     dispatch(updateComponent1Data(newData));
-//   };
-
-//   return (
-//     <div>
-//       {/* ваш код для Component1 */}
-//       <button onClick={() => handleDataChange({ foo: 'bar' })}>
-//         Обновить данные
-//       </button>
-//     </div>
-//   );
-// };
-
-// // 5
-// // DataCollector.js
-// import React from 'react';
-// import { useSelector } from 'react-redux';
-// import axios from 'axios';
-
-// const DataCollector = () => {
-//   const data = useSelector((state) => state);
-
-//   const handleSaveData = async () => {
-//     try {
-//       const response = await axios.post('https://your-supabase-url.com/api/insert', data);
-//       console.log(response);
-//     } catch (error) {
-//       console.error(error);
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <button onClick={handleSaveData}>Сохранить данные в БД</button>
-//     </div>
-//   );
-// };
-
-// // 6
-// // App.js
-// import React from 'react';
-// import { Provider } from 'react-redux';
-// import store from './store';
-// import App from './App';
-
-// const AppContainer = () => {
-//   const initialState = localStorage.getItem('appState');
-//   if (initialState) {
-//     store.dispatch({ type: 'INIT_APP_STATE', payload: JSON.parse(initialState) });
-//   }
-
-//   return (
-//     <Provider store={store}>
-//       <App />
-//     </Provider>
-//   );
-// };

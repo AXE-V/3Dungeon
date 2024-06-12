@@ -1,58 +1,64 @@
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { SVGComponent } from '../../../../interfaces/SVGComponent';
-import { getAllZipByUserID } from '../../../../redux/slices/data/post';
 import { supabase } from '../../../../supabase';
 import { useCustomDispatch } from '../../../../hooks/useCustomDispatch';
 import { Tables, TablesInsert } from '../../../../interfaces/DatabaseGeneratedTypes';
 import { useAuth } from '../../../../providers/authProvider';
 import { getUserDataByID } from '../../../../redux/slices/data/user';
 import { styles as S } from './style';
+import { cssPathes } from '../../../../style';
+import { path } from '../../../../utils/path';
+import { PostModel, loadPostFiles } from '../../../../redux/slices/data/post';
+import { ModelData } from '../../../../interfaces/ModelData';
+import { ModelViewer } from '../../../PostModel/components/ModelViewer';
 
-export const Card_1: FC<SVGComponent & { data: Tables<'models'>; img: string }> = ({
-  style,
-  data,
-  img,
-}) => {
+export const Card_1: FC<SVGComponent & PostModel> = ({ style, model, post }) => {
   const [userData, setUserData] = useState<Tables<'users'> | null>(null);
   const dispatch = useCustomDispatch();
   const [mouseOver, setMouseOver] = useState(false);
 
   useEffect(() => {
-    const thunksExec = async () => {
-      const zipUrl = await dispatch(
-        getAllZipByUserID({ uid: data.user_id, zip_name: data.zip_name! }),
-      ).unwrap();
-      console.log(zipUrl);
+    try {
+      const getUserData = async () => {
+        const uid = await dispatch(getUserDataByID(post.user_id)).unwrap();
+        setUserData(uid);
+      };
+      getUserData();
 
-      const userInfo = await dispatch(getUserDataByID(data.user_id)).unwrap();
-      setUserData(userInfo);
-    };
+      console.log({ model, post });
 
-    thunksExec();
+      const loadFiles = async () => {
+        await dispatch(loadPostFiles({ model, post })).unwrap();
+      };
+      loadFiles();
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
-  const onMouseOver = (e: SyntheticEvent<EventTarget>) => {
+  const onMouseOver = () => {
     setMouseOver(true);
   };
-  const onMouseLeave = (e: SyntheticEvent<EventTarget>) => {
+  const onMouseLeave = () => {
     setMouseOver(false);
   };
 
   return (
     <S.container>
-      {/* <div
+      <ModelViewer
+        orbitControlsProps={{ autoRotate: true }}
+        post={post}
         style={{
           position: 'absolute',
+          zIndex: -1,
+          width: '18vw',
+          height: '10vw',
           left: '50%',
           top: '50%',
-          transform: 'translate(-50%, -50%)',
-        }}>
-        <button
-          style={{ opacity: 1, background: '#181818', pointerEvents: 'none' }}
-          onMouseOver={(e) => e.stopPropagation()}>
-          to collection
-        </button>
-      </div> */}
+          transform: 'translate(-45%, -60%)',
+          clipPath: cssPathes.bevelPolygon(['0vw', '1.5vw', '0vw', '0vw']),
+        }}
+      />
       <svg
         onMouseOver={onMouseOver}
         onMouseLeave={onMouseLeave}
@@ -75,8 +81,6 @@ export const Card_1: FC<SVGComponent & { data: Tables<'models'>; img: string }> 
         <g id="card">
           <g id="mask">
             <g clip-path="url(#clip-path)">
-              <image id="img" transform="translate(42.88 1.03) scale(0.61)" href={img} />
-
               <rect
                 style={{
                   transition: '.15s',
@@ -122,6 +126,12 @@ export const Card_1: FC<SVGComponent & { data: Tables<'models'>; img: string }> 
                     onMouseLeave={(e) => (e.currentTarget.style.background = '#181818')}>
                     <p style={{ opacity: 0.75 }}>edit</p>
                   </button>
+                  <button
+                    style={{ opacity: 1, background: '#181818' }}
+                    onMouseOver={(e) => (e.currentTarget.style.background = '#1e1e1e')}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = '#181818')}>
+                    <p style={{ opacity: 0.75 }}>download</p>
+                  </button>
                 </div>
               </foreignObject>
             </g>
@@ -166,7 +176,7 @@ export const Card_1: FC<SVGComponent & { data: Tables<'models'>; img: string }> 
               font-size="22"
               fill="#fff"
               font-family="ISL_FADETOBLAK, ISL_FADE TO BLAK">
-              {data?.title}
+              {post?.title}
             </text>
           </g>
           <g opacity="0.5">
@@ -210,7 +220,7 @@ export const Card_1: FC<SVGComponent & { data: Tables<'models'>; img: string }> 
           />
           <g id="user_name" opacity="0.5">
             <text
-              transform="translate(76.92 193.94)"
+              transform="translate(56.92 193.94)"
               font-size="20"
               fill="#fff"
               font-family="ISL_FADETOBLAK, ISL_FADE TO BLAK">
@@ -356,7 +366,7 @@ export const Card_1: FC<SVGComponent & { data: Tables<'models'>; img: string }> 
               font-size="14"
               fill="#c6b63f"
               font-family="ISL_FADETOBLAK, ISL_FADE TO BLAK">
-              {data?.rating}/100
+              {post?.rating}/100
             </text>
           </g>
           <circle cx="124.36" cy="4.76" r="1.35" fill="#4d4d4d" opacity="0.25" />

@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "/public",
   "scripts": {
     "app-server": "nodemon ./src/server/index.js",
     "app-client": "vite",
@@ -20,6 +21,7 @@
     "@types/three": "^0.162.0",
     "adm-zip": "^0.5.12",
     "axios": "^1.6.8",
+    "base64-arraybuffer": "^1.0.2",
     "cors": "^2.8.5",
     "easymde": "^2.18.0",
     "eslint-plugin-react": "^7.34.1",
@@ -36,9 +38,11 @@
     "redux-persist": "^6.0.0",
     "three": "^0.162.0",
     "three-stdlib": "^2.30.3",
+    "ts-node": "^10.9.2",
     "type-fest": "^4.18.3"
   },
   "devDependencies": {
+    "@rollup/plugin-dynamic-import-vars": "^2.1.2",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "@typescript-eslint/eslint-plugin": "^6.20.0",

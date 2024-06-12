@@ -4,14 +4,15 @@ import { styleController } from '../../../../utils/styleController';
 import Menu from './Menu';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../../providers/authProvider';
+import { supabase } from '../../../../supabase';
 
 export const BtnUser: FC<SVGComponent> = ({ style }) => {
   const [visible, setvisible] = useState(false);
   const navigate = useNavigate();
-  const { session } = useAuth();
+  const { session, user } = useAuth();
 
   function onClick() {
-    session ? navigate(`/user/${session?.user.user_metadata.login}`) : navigate('/auth/login');
+    session ? navigate(`/user/${user?.user_metadata.login}`) : navigate('/auth/login');
   }
 
   function onMouseLeave<E extends SyntheticEvent<EventTarget>>(e: E) {

@@ -1,30 +1,15 @@
-import { ChangeEvent, FC, SyntheticEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, FC, SyntheticEvent } from 'react';
 import { SVGComponent } from '../../../../interfaces/SVGComponent';
 import { styleController } from '../../../../utils/styleController';
-import axios from '../../../../redux/axios.ts';
 import { useNavigate } from 'react-router-dom';
 import { useCustomDispatch } from '../../../../hooks/useCustomDispatch.ts';
-import {
-  generateGLTFJSX,
-  postSelector,
-  setPostAbout,
-  setPostCategory,
-  setPostFormat,
-  setPostGeometry,
-  setPostLicense,
-  setPostSize,
-  setPostTags,
-  setPostTitle,
-  unzipPostData,
-} from '../../../../redux/slices/data/post.ts';
+import { generateGLTFJSX, unzipPostData } from '../../../../redux/slices/data/post.ts';
+import { path } from '../../../../utils/path.ts';
 
-type MessageProps = {
-  message?: string;
-  setMessage?: (val: string) => void;
-};
-export const BrowseBtn: FC<SVGComponent & MessageProps> = ({ style, user, setMessage }) => {
+export const BrowseBtn: FC<SVGComponent> = ({ style, user }) => {
   const navigate = useNavigate();
   const dispatch = useCustomDispatch();
+  const { getBasename } = path;
 
   function onMouseLeave<E extends SyntheticEvent<EventTarget>>(e: E) {
     styleController({ target: e, command: 'remove' });
@@ -35,29 +20,27 @@ export const BrowseBtn: FC<SVGComponent & MessageProps> = ({ style, user, setMes
   }
 
   const onChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const file = e.target.files?.[0];
-    if (!file) {
-      return;
-    }
+    try {
+      e.preventDefault();
+      const file = e.target.files?.[0];
+      if (!file) {
+        return;
+      }
 
-    setMessage?.('unpacking the archive');
-    const unzippedData = await dispatch(unzipPostData(file)).unwrap();
-    console.log(unzippedData);
+      const data = await dispatch(unzipPostData(file)).unwrap();
+      console.log(data);
 
-    dispatch(setPostSize(+(file.size / 8 / 1024 / 1024).toFixed(2)));
+      // const sceneBasename = getBasename(`${data.scene?.path}`);
 
-    const sceneBasename = getBasename(`${unzippedData.scene?.path}`);
+      dispatch(
+        generateGLTFJSX({ scene: data.scene?.path!, zip_name: data.zip_name!, uid: user?.id! }),
+      );
 
-    setMessage?.('generating model data');
-    const gltfjsx = await dispatch(
-      generateGLTFJSX({ scene: sceneBasename, outputBasename: 'model.tsx' }),
-    ).unwrap();
-    console.log(gltfjsx);
+      // dispatch(generateGLTFJSX({ scene: sceneBasename, zip_name: data.zip_name!, uid: user?.id! }));
 
-    setMessage?.('');
-    if (gltfjsx.success) {
       navigate(`/user/${user?.id}/create-post`);
+    } catch (error) {
+      console.log(error);
     }
   };
 

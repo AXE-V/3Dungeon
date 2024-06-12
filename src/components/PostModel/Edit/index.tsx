@@ -7,13 +7,11 @@ import { ModelViewer } from '../components/ModelViewer';
 import { Styles as S } from '../style';
 import { Select } from '../../Common/Select';
 import { Tags } from '../../Common/Tags';
-import { SyntheticEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { filterCategory, filterLicense } from '../../Common/Select/data';
-import store from '../../../redux/store';
-import { TablesInsert, Tables } from '../../../interfaces/DatabaseGeneratedTypes';
+import { Tables } from '../../../interfaces/DatabaseGeneratedTypes';
 import { useAuth } from '../../../providers/authProvider';
 import { Message } from '../../Common/Message';
-import { useLocation } from 'react-router-dom';
 
 import {
   editPost,
@@ -24,16 +22,7 @@ import {
   setPostTitle,
   setPostUser,
 } from '../../../redux/slices/data/post';
-import {
-  Action,
-  ActionCreator,
-  CreateSliceOptions,
-  createAction,
-  ThunkDispatch,
-} from '@reduxjs/toolkit';
 import { useCustomDispatch } from '../../../hooks/useCustomDispatch';
-import { createPost } from '../../../api/post';
-import { supabase } from '../../../supabase';
 import { useSelector } from 'react-redux';
 
 export const EditPostModel = () => {
@@ -41,7 +30,6 @@ export const EditPostModel = () => {
   const { user } = useAuth();
   const [postSaved, setPostSaved] = useState({ saved: false, error: false });
   const [loading, setLoading] = useState(false);
-  const [operation, setOperation] = useState<'update' | 'insert'>('update');
   const postSlice = useSelector(postSelector);
   const dispatch = useCustomDispatch();
 
@@ -54,23 +42,21 @@ export const EditPostModel = () => {
       setLoading(true);
       setPostSaved((prev) => ({ ...prev, saved: false, error: false }));
 
-      const pathTSX = '/model.tsx';
-      const dataTSX = import(pathTSX);
-      const pathGLB = '/scene-transformed.glb';
-      const dataGLB = import(pathGLB);
+      // const pathTSX = '/model.tsx';
+      // const dataTSX = await import(pathTSX);
+      // const pathGLB = '/scene-transformed.glb';
+      // const dataGLB = await import(pathGLB);
 
-      const modelData = {
-        glb: dataGLB,
-        tsx: dataTSX,
-      };
+      // const modelData = {
+      //   glb: dataGLB,
+      //   tsx: dataTSX,
+      // };
 
-      const postData: Tables<'models'> = {
+      const post: Tables<'models'> = {
         about: postSlice.about,
         category: postSlice.category,
         format: postSlice.format,
-        geometry: JSON.stringify(postSlice.geometry),
         license: postSlice.license,
-        size: postSlice.size,
         tags: postSlice.tags,
         title: postSlice.title,
         user_id: postSlice.user_id,
@@ -79,20 +65,14 @@ export const EditPostModel = () => {
 
       const dispatchedData = await dispatch(
         editPost({
-          postData,
-          modelData,
+          post,
+          // modelData,
           zip_name: `${postSlice.zip_name}`,
           uid: user?.id,
         }),
       ).unwrap();
 
       if (!dispatchedData.success) throw dispatchedData.message;
-
-      if (dispatchedData.count === 1) {
-        setOperation('insert');
-      } else {
-        setOperation('update');
-      }
 
       setLoading(() => false);
       setPostSaved((prev) => ({ ...prev, saved: true, error: false }));
@@ -109,12 +89,65 @@ export const EditPostModel = () => {
       }, 3000);
     }
   };
+  // const onClick = async () => {
+  //   try {
+  //     setLoading(true);
+  //     setPostSaved((prev) => ({ ...prev, saved: false, error: false }));
+
+  //     const pathTSX = '/model.tsx';
+  //     const dataTSX = await import(pathTSX);
+  //     const pathGLB = '/scene-transformed.glb';
+  //     const dataGLB = await import(pathGLB);
+
+  //     fd.append('tsx', dataTSX);
+  //     const modelData = {
+  //       glb: dataGLB,
+  //       tsx: dataTSX,
+  //     };
+
+  //     const postData: Tables<'models'> = {
+  //       about: postSlice.about,
+  //       category: postSlice.category,
+  //       format: postSlice.format,
+  //       license: postSlice.license,
+  //       tags: postSlice.tags,
+  //       title: postSlice.title,
+  //       user_id: postSlice.user_id,
+  //       zip_name: postSlice.zip_name,
+  //     };
+
+  //     const dispatchedData = await dispatch(
+  //       editPost({
+  //         postData,
+  //         modelData,
+  //         zip_name: `${postSlice.zip_name}`,
+  //         uid: user?.id,
+  //       }),
+  //     ).unwrap();
+
+  //     if (!dispatchedData.success) throw dispatchedData.message;
+
+  //     setLoading(() => false);
+  //     setPostSaved((prev) => ({ ...prev, saved: true, error: false }));
+  //     setTimeout(() => {
+  //       setPostSaved((prev) => ({ ...prev, saved: false, error: false }));
+  //     }, 3000);
+  //   } catch (error) {
+  //     setLoading(() => false);
+  //     console.log(error);
+  //     setPostSaved((prev) => ({ ...prev, error: true, saved: false }));
+
+  //     setTimeout(() => {
+  //       setPostSaved((prev) => ({ ...prev, error: false, saved: false }));
+  //     }, 3000);
+  //   }
+  // };
 
   return (
     <div>
       {postSaved.saved && (
         <Message color="#c6b63f" style={{ left: '86vw', top: '6vw' }}>
-          {operation === 'insert' ? 'Post created' : 'Post edited'}
+          {'Post saved'}
         </Message>
       )}
       {postSaved.error && (
@@ -130,7 +163,10 @@ export const EditPostModel = () => {
       <Scrollbar buttons={true} className={S.window()} scrollStyle={{ height: '96.5%', top: 48 }}>
         <div className={S.mainGrid()}>
           <S.Column1>
-            <ModelViewer />
+            <ModelViewer
+              post={{ zip_name: postSlice.zip_name, user_id: postSlice.user_id }}
+              style={{ height: '34vw' }}
+            />
             <Field_2
               sliceValue={postSlice.title}
               action={setPostTitle}

@@ -1,36 +1,39 @@
-import { FC, ReactNode, Suspense, useEffect, useRef, useState } from 'react';
-import { Canvas, GroupProps } from '@react-three/fiber';
-import { Environment, OrbitControls } from '@react-three/drei';
-import { Styles } from './style';
+import { FC, Suspense, lazy, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { Canvas, GroupProps, useFrame, useLoader, useThree } from '@react-three/fiber';
+import { Environment, Html, OrbitControls, OrbitControlsProps, useGLTF } from '@react-three/drei';
+import { Styles as S } from './style';
 import { SVGComponent } from '../../../../interfaces/SVGComponent';
+import { GLTFLoader } from 'three-stdlib';
+import { Loading } from '../../../Common/Model/Loading';
+import { modelImporter } from './modelImporter';
+import { PostModel } from '../../../../redux/slices/data/post';
+import * as THREE from 'three';
 
-export const ModelViewer: FC<SVGComponent> = ({ style }) => {
-  const [Model, setModel] = useState<{ (props: GroupProps): JSX.Element }>();
+type Props = {
+  orbitControlsProps?: OrbitControlsProps;
+  post: Pick<PostModel['post'], 'zip_name' | 'user_id'>;
+};
 
-  useEffect(() => {
-    const pathModel = '/model.tsx';
-    import(pathModel).then((d) => {
-      const modelProps: GroupProps = { scale: 30 };
-      setModel(() => d.Model(modelProps));
-    });
-  }, []);
+export const ModelViewer: FC<SVGComponent & Props> = ({ style, post, orbitControlsProps }) => {
+  const Model = modelImporter(post);
 
   return (
-    <Styles.ModelViewer style={style}>
-      <Canvas camera={{ position: [100, 0, 100] }}>
-        <Suspense>
-          {/* <directionalLight position={[0, -2, 0]} />
+    <>
+      <S.ModelViewer style={{ ...style }}>
+        <Canvas camera={{ position: [70, 30, 70] }}>
+          <Suspense fallback={<Loading />}>
+            {/* <directionalLight position={[0, -2, 0]} />
           <directionalLight position={[0, 2, 0]} />
           <directionalLight position={[0, 0, 1]} intensity={0.8} />
           <directionalLight position={[0, 0, -1]} intensity={0.8} />
           <ambientLight args={['white', 0.4]} /> */}
-
-          <OrbitControls />
-          {Model}
-
-          <Environment files={'/rosendal_mountain_midmorning_2k.hdr'} background />
-        </Suspense>
-      </Canvas>
-    </Styles.ModelViewer>
+            {Model}
+            {/* <Model /> */}
+            <OrbitControls {...orbitControlsProps} />
+            <Environment files={'/rosendal_mountain_midmorning_2k.hdr'} background />
+          </Suspense>
+        </Canvas>
+      </S.ModelViewer>
+    </>
   );
 };

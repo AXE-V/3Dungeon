@@ -1,7 +1,7 @@
-import bgGradient from '../3dungeon/items/bgGradient.svg'
-import mainBodyDecor from '../3dungeon/items/mainBodyDecor.svg'
-import cell from '../3dungeon/items/cell.svg'
-import { styled } from '../../../stitches.config'
+import bgGradient from '../3dungeon/items/bgGradient.svg';
+import mainBodyDecor from '../3dungeon/items/mainBodyDecor.svg';
+import cell from '../3dungeon/items/cell.svg';
+import { styled } from '../../../stitches.config';
 
 export const BgGradient = styled('div', {
   position: 'absolute',
@@ -14,7 +14,7 @@ export const BgGradient = styled('div', {
   backgroundRepeat: 'no-repeat',
   width: '101vw',
   height: '101vh',
-})
+});
 
 export const MainBodyDecor = styled('div', {
   position: 'absolute',
@@ -25,11 +25,11 @@ export const MainBodyDecor = styled('div', {
   backgroundRepeat: 'no-repeat',
   width: '100vw',
   height: '100vw',
-})
+});
 
 export const Cell = styled('div', {
   background: `url("${cell}")`,
   backgroundRepeat: 'no-repeat',
   width: '16vw',
-})
-
+  zIndex: -1,
+});

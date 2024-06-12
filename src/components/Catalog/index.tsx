@@ -8,36 +8,37 @@ import { AppDispath } from '../../redux/store.js';
 import { supabase } from '../../supabase.js';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../providers/authProvider.js';
-import { getUserPosts, postSelectorZipName } from '../../redux/slices/data/post.js';
+import {
+  PostBlob,
+  PostModel,
+  getUserPosts,
+  loadPostFiles,
+  postSelectorZipName,
+} from '../../redux/slices/data/post.js';
 import { useCustomDispatch } from '../../hooks/useCustomDispatch.js';
-import { Tables } from '../../interfaces/DatabaseGeneratedTypes.js';
-import { getUserDataByID } from '../../redux/slices/data/user.js';
 import { NotFound } from '../NotFound.js';
 import { usePathValidate } from '../../hooks/usePathValidate.js';
-import { imgs } from './sample.js';
+import { CardRender } from './CardRender.js';
+import { path } from '../../utils/path.js';
+import axios from '../../redux/axios.ts';
 
-type FetchedData = {
-  postsData: Tables<'models'>[] | null;
-  modelsData: any[] | null;
-};
 const Catalog = () => {
   const { user } = useAuth();
   const dispatch = useCustomDispatch();
   const validatePathes = usePathValidate();
-  const [fetchedData, setFetchedData] = useState<FetchedData>({
-    postsData: null,
-    modelsData: null,
-  });
+  const [fetchedData, setFetchedData] = useState<PostModel[]>();
+  const [isFetched, setIsFetched] = useState(false);
 
   const rootPathFn = async () => {};
   const modelsPathFn = async () => {
     try {
-      if (user?.id) {
-        const userPosts = await dispatch(getUserPosts({ userId: user.id })).unwrap();
-        console.log(userPosts);
+      if (isFetched) return;
+      const userPosts = await dispatch(getUserPosts(user?.id!)).unwrap();
+      setTimeout(() => {
         setFetchedData(userPosts);
-        return userPosts;
-      }
+      }, 1000);
+
+      setIsFetched(true);
     } catch (error) {
       console.log(error);
     }
@@ -51,31 +52,6 @@ const Catalog = () => {
     { path: `/user/${user?.user_metadata.login}/likes`, fn: likesPathFn },
   ];
 
-  // const catalogPathes = [
-  //   `/`,
-  //   `/user/${user?.user_metadata.login}/3d-models`,
-  //   `/user/${user?.user_metadata.login}/likes`,
-  // ];
-
-  // const validatePathes = (pathes: string[]) => pathes.some((path) => path === pathname);
-
-  useEffect(() => {
-    const getData = async () => {
-      const { data, error } = await supabase.storage
-        .from('models')
-        .list(`${user?.id}/barbie_dodge_pickup_custom_longcar_by_alex.ka`);
-      console.log(data);
-      console.log(error);
-
-      return { data, error };
-    };
-    getData();
-  }, []);
-
-  useEffect(() => {
-    console.log(fetchedData);
-  }, [fetchedData]);
-
   return (
     <>
       {!validatePathes(catalogPathes) ? (
@@ -83,14 +59,7 @@ const Catalog = () => {
       ) : (
         <div>
           <Styles.CardContainer>
-            {/* {fetchedData.postsData &&
-              fetchedData.postsData.map((item) => (
-                <Card_1 key={item.id} data={{ ...item! }} style={{ height: '12vw' }} />
-              ))} */}
-
-            {imgs.map((img, i) => (
-              <Card_1 key={i} img={img} style={{ height: '12vw' }} />
-            ))}
+            {fetchedData && <CardRender data={fetchedData} />}
           </Styles.CardContainer>
           <section>
             <BtnNextBack style={{ left: '.6vw' }} />
