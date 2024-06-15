@@ -1,8 +1,7 @@
-import { css, styled } from "../../../../../stitches.config";
-import { cssPathes } from "../../../../style";
+import { css, styled } from '../../../../../stitches.config';
+import { cssPathes } from '../../../../style';
 
-export const Styles = { 
-
+export const Styles = {
   Container: styled('section', {
     width: '23vw',
     position: 'relative',
@@ -11,7 +10,7 @@ export const Styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    rowGap: '1vw'
+    rowGap: '1vw',
   }),
 
   Counter: styled('output', {
@@ -21,7 +20,7 @@ export const Styles = {
     clipPath: cssPathes.bevelPolygon('.3vw'),
     background: '$accent1',
     color: '$dark1',
-    opacity: .75
+    opacity: 0.75,
   }),
 
   header: css({
@@ -30,10 +29,10 @@ export const Styles = {
     justifyContent: 'center',
     alignItems: 'center',
     columnGap: '1vw',
-    padding: '1.5vw 0 .5vw 0'
+    padding: '1.5vw 0 .5vw 0',
   }),
 
   // scroll: css({
   //   // height: '77vh',
   // })
-}
+};

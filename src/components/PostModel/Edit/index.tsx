@@ -42,16 +42,6 @@ export const EditPostModel = () => {
       setLoading(true);
       setPostSaved((prev) => ({ ...prev, saved: false, error: false }));
 
-      // const pathTSX = '/model.tsx';
-      // const dataTSX = await import(pathTSX);
-      // const pathGLB = '/scene-transformed.glb';
-      // const dataGLB = await import(pathGLB);
-
-      // const modelData = {
-      //   glb: dataGLB,
-      //   tsx: dataTSX,
-      // };
-
       const post: Tables<'models'> = {
         about: postSlice.about,
         category: postSlice.category,
@@ -66,9 +56,8 @@ export const EditPostModel = () => {
       const dispatchedData = await dispatch(
         editPost({
           post,
-          // modelData,
           zip_name: `${postSlice.zip_name}`,
-          uid: user?.id,
+          uid: user?.id!,
         }),
       ).unwrap();
 
@@ -89,59 +78,6 @@ export const EditPostModel = () => {
       }, 3000);
     }
   };
-  // const onClick = async () => {
-  //   try {
-  //     setLoading(true);
-  //     setPostSaved((prev) => ({ ...prev, saved: false, error: false }));
-
-  //     const pathTSX = '/model.tsx';
-  //     const dataTSX = await import(pathTSX);
-  //     const pathGLB = '/scene-transformed.glb';
-  //     const dataGLB = await import(pathGLB);
-
-  //     fd.append('tsx', dataTSX);
-  //     const modelData = {
-  //       glb: dataGLB,
-  //       tsx: dataTSX,
-  //     };
-
-  //     const postData: Tables<'models'> = {
-  //       about: postSlice.about,
-  //       category: postSlice.category,
-  //       format: postSlice.format,
-  //       license: postSlice.license,
-  //       tags: postSlice.tags,
-  //       title: postSlice.title,
-  //       user_id: postSlice.user_id,
-  //       zip_name: postSlice.zip_name,
-  //     };
-
-  //     const dispatchedData = await dispatch(
-  //       editPost({
-  //         postData,
-  //         modelData,
-  //         zip_name: `${postSlice.zip_name}`,
-  //         uid: user?.id,
-  //       }),
-  //     ).unwrap();
-
-  //     if (!dispatchedData.success) throw dispatchedData.message;
-
-  //     setLoading(() => false);
-  //     setPostSaved((prev) => ({ ...prev, saved: true, error: false }));
-  //     setTimeout(() => {
-  //       setPostSaved((prev) => ({ ...prev, saved: false, error: false }));
-  //     }, 3000);
-  //   } catch (error) {
-  //     setLoading(() => false);
-  //     console.log(error);
-  //     setPostSaved((prev) => ({ ...prev, error: true, saved: false }));
-
-  //     setTimeout(() => {
-  //       setPostSaved((prev) => ({ ...prev, error: false, saved: false }));
-  //     }, 3000);
-  //   }
-  // };
 
   return (
     <div>

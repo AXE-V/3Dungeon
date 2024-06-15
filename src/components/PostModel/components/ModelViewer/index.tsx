@@ -28,7 +28,6 @@ export const ModelViewer: FC<SVGComponent & Props> = ({ style, post, orbitContro
           <directionalLight position={[0, 0, -1]} intensity={0.8} />
           <ambientLight args={['white', 0.4]} /> */}
             {Model}
-            {/* <Model /> */}
             <OrbitControls {...orbitControlsProps} />
             <Environment files={'/rosendal_mountain_midmorning_2k.hdr'} background />
           </Suspense>

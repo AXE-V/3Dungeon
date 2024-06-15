@@ -26,12 +26,10 @@ const initialState: Tables<'models'> = {
 type Editpost = {
   post: TablesInsert<'models'>;
   zip_name: string;
-  // modelData: object;
   uid: string;
 };
 
 type ZipResponse = {} & Response;
-
 // обновление и вставка поста, вставка файлов
 export const editPost = createAsyncThunk(
   'post-model/editPost',
@@ -59,7 +57,6 @@ export const unzipPostData = createAsyncThunk('post-model/unzipPostData', async 
   const fd = new FormData();
   fd.append('zip', file);
   const { data } = await axios.post<UnzipResponse>('/unzip', fd);
-
   if (!data.success) throw data.message;
   return data;
 });
@@ -87,55 +84,153 @@ export type PostModel = {
   model: ModelData[];
 };
 
+export const getLikedPosts = createAsyncThunk('post-model/getLikedPosts', async (uid: string) => {
+  const { data, error } = await supabase
+    .from('likes')
+    .select(`models(*)`)
+    .eq('user_id', uid)
+    .limit(12);
+  if (error) throw error;
+  return postsIterator({ posts: data, uid: uid });
+});
+
+type SetPostLike = { user_id: string; model_id: string; checked: boolean };
+export const setPostLike = createAsyncThunk(
+  'post-model/setPostLike',
+  async ({ user_id, model_id, checked }: SetPostLike) => {
+    if (!checked) {
+      await supabase.from('likes').delete().eq('model_id', model_id).eq('user_id', user_id);
+    } else {
+      await supabase.from('likes').insert({ user_id, model_id });
+    }
+  },
+);
+
+type GetPostLike = { user_id: string; model_id: string };
+export const getPostLike = createAsyncThunk(
+  'post-model/getPostLike',
+  async ({ user_id, model_id }: GetPostLike) => {
+    const { data, error } = await supabase
+      .from('likes')
+      .select()
+      .eq('user_id', user_id)
+      .eq('model_id', model_id)
+      .limit(1)
+      .single();
+    if (error) throw error;
+    return data;
+  },
+);
+
+export const getPostCollections = createAsyncThunk(
+  'post-model/getPostCollections',
+  async (uid: string) => {
+    const { data, error } = await supabase
+      .from('collections')
+      .select(`models(*)`)
+      .eq('creator_id', uid)
+      .limit(12);
+    if (error) throw error;
+    // return data;
+    return postsIterator({ posts: data, uid: uid });
+  },
+);
+
+export const getAllPosts = createAsyncThunk('post-model/getAllPosts', async () => {
+  const { data: posts, error } = await supabase.from('models').select().limit(12);
+  if (error) throw error;
+  return postsIterator({ posts });
+});
+
 // получение всех постов пользователя
 export const getUserPosts = createAsyncThunk('post-model/getUserPosts', async (uid: string) => {
-  const { getName } = path;
-  const data: PostModel[] = [];
   // посты
-  const { data: postsData, error: postError } = await supabase
+  const { data: posts, error: postError } = await supabase
     .from('models')
     .select()
     .eq('user_id', `${uid}`)
     .limit(12);
-
   if (postError) throw 'error retrieving post data';
-
-  (postsData as Tables<'models'>[]).forEach(async (post) => {
-    // все файлы к посту
-    const { data: modelData, error: modelError } = await supabase.storage
-      .from('models')
-      .list(`${uid}/${getName(post.zip_name)}`);
-
-    if (modelError) throw modelError;
-    data.push({ model: modelData, post: post });
-  });
-
-  return data;
+  return postsIterator({ posts, uid });
 });
 
-type GetPostFiles = { post: Tables<'models'>; model: ModelData[] };
+type PostsIterator = { posts: Tables<'models'>[] | { models: Tables<'models'> }[]; uid?: string };
+const postsIterator = ({ posts, uid }: PostsIterator) => {
+  const postModel: PostModel[] = [];
+  posts.forEach(async (post) => {
+    postStructure({ post, uid, postModel });
+  });
+  return postModel;
+};
+
+type PostStructure = {
+  post: Tables<'models'> | { models: Tables<'models'> };
+  uid?: string;
+  postModel: PostModel[];
+};
+const postStructure = ({ post, uid, postModel }: PostStructure) => {
+  const { getName } = path;
+  const exec = async () => {
+    if (uid) {
+      if ('models' in post) {
+        const { data: modelData, error: modelError } = await supabase.storage
+          .from('models')
+          .list(`${uid}/${getName(post.models.zip_name)}`);
+        if (modelError) throw modelError;
+        postModel.push({ model: modelData, post: post.models });
+      } else {
+        const { data: modelData, error: modelError } = await supabase.storage
+          .from('models')
+          .list(`${uid}/${getName(post.zip_name)}`);
+
+        if (modelError) throw modelError;
+        postModel.push({ model: modelData, post: post });
+      }
+    } else {
+      if ('models' in post) {
+        const { data: modelData, error: modelError } = await supabase.storage
+          .from('models')
+          .list(`${post.models.user_id}/${getName(post.models.zip_name)}`);
+        if (modelError) throw modelError;
+        postModel.push({ model: modelData, post: post.models });
+      } else {
+        const { data: modelData, error: modelError } = await supabase.storage
+          .from('models')
+          .list(`${post.user_id}/${getName(post.zip_name)}`);
+
+        if (modelError) throw modelError;
+        postModel.push({ model: modelData, post: post });
+      }
+    }
+  };
+  exec();
+};
+// используется в каждой карте поста, делает запрос и скачивает файлы модели. Принимает данные поста и файлы модели
+type LoadPostFiles = { post: Tables<'models'>; model: ModelData[] };
 export const loadPostFiles = createAsyncThunk(
   'post-model/loadPostFiles',
-  async ({ post, model }: GetPostFiles) => {
+  async ({ post, model }: LoadPostFiles) => {
     const { getName } = path;
 
     const fd = new FormData();
-    model.map(async (obj) => {
-      // blobs
-      const { data, error } = await supabase.storage
-        .from('models')
-        .download(`${post.user_id}/${getName(post.zip_name)}/${obj.name}`);
-      if (error) throw error;
+    // качает все бинарники модели
+    const download = async () => {
+      model.map(async (obj) => {
+        // бинарник файла
+        const { data, error } = await supabase.storage
+          .from('models')
+          .download(`${post.user_id}/${getName(post.zip_name)}/${obj.name}`);
+        if (error) throw error;
 
-      console.log(data);
+        console.log(data);
 
-      if (data.type === 'application/octet-stream') {
-        fd.append('file', data, 'scene-transformed.glb');
-      }
-      if (data.type === 'application/typescript') {
-        fd.append('file', data, 'scene.tsx');
-      }
-    });
+        if (data.type !== 'application/zip') {
+          fd.append('file', data, obj.name);
+        }
+      });
+    };
+    await download();
+
     fd.append('zip_name', post.zip_name);
     fd.append('user_id', post.user_id);
     setTimeout(async () => {
@@ -143,30 +238,6 @@ export const loadPostFiles = createAsyncThunk(
     }, 1000);
   },
 );
-// type GetPostFiles = { post: Tables<'models'>; model: ModelData[] };
-// export const loadPostFiles = createAsyncThunk(
-//   'post-model/loadPostFiles',
-//   async ({ post, model }: GetPostFiles) => {
-//     const { getName } = path;
-//     const blobs: Blob[] = [];
-
-//     model.map(async (obj) => {
-//       const blobObj = await supabase.storage
-//         .from('models')
-//         .download(`${post.user_id}/${getName(post.zip_name)}/${obj.name}`);
-//       if (blobObj.error) throw blobObj.error;
-//       // blobObj.data.type
-//       blobs.push(blobObj.data);
-//     });
-
-//     const { data } = await axios.post('/load-gltf-jsx', {
-//       blobs,
-//       zip_name: post.zip_name,
-//       uid: post.user_id,
-//     });
-//     return blobs;
-//   },
-// );
 
 const postSlice = createSlice({
   name: 'post-model',

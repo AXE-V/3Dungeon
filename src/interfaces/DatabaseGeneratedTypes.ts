@@ -3,6 +3,49 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   public: {
     Tables: {
+      collections: {
+        Row: {
+          creator_id: string;
+          id: string;
+          model_id: string;
+          user_id: string;
+        };
+        Insert: {
+          creator_id: string;
+          id: string;
+          model_id: string;
+          user_id: string;
+        };
+        Update: {
+          creator_id?: string;
+          id?: string;
+          model_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'collections_creator_id_fkey';
+            columns: ['creator_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'collections_model_id_fkey';
+            columns: ['model_id'];
+            isOneToOne: false;
+            referencedRelation: 'models';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'collections_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       likes: {
         Row: {
           model_id: string;
@@ -17,6 +60,13 @@ export type Database = {
           user_id?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: 'likes_model_id_fkey';
+            columns: ['model_id'];
+            isOneToOne: false;
+            referencedRelation: 'models';
+            referencedColumns: ['id'];
+          },
           {
             foreignKeyName: 'likes_user_id_fkey';
             columns: ['user_id'];

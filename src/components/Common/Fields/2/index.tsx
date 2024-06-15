@@ -18,6 +18,7 @@ export const Field_2: FC<SVGComponent & Basics & IInput & { cleared?: boolean }>
     cleared,
     sliceValue,
     action,
+    isCart,
   }) => {
     const { onClick, onMouseLeave, onMouseOver, canSee, setCanSee, inpRef } = useField_2(
       _id,

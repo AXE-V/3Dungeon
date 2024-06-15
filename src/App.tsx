@@ -43,6 +43,14 @@ function App() {
                 }
               />
               <Route
+                path="/user/:login/collections"
+                element={
+                  <ProtectedRoute>
+                    <Catalog />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/user/:login/likes/:id"
                 element={
                   <ProtectedRoute>

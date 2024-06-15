@@ -30,7 +30,7 @@ const Header = () => {
           <Logo width="2.9vw" />
           <LogoText height="1.7vw" />
         </Link>
-        <Search inputOptions={{ type: 'search' }} />
+        <Search />
         <div className={styles.buttons()}>
           <BtnFilter
             style={{ height: height }}

@@ -1,18 +1,29 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { SVGComponent } from '../../../../interfaces/SVGComponent';
 import { Styles } from './style';
 import { Scrollbar } from '../../../Common/Scroll';
 import { Card_2 } from '../../../Common/Cards/2';
-import BtnPay from './components/BtnPay';
+import BtnCollection from './components/BtnCollection';
 import { imgs } from '../../../Catalog/sample';
+import { useSelector } from 'react-redux';
+import { cartSelector, setCartID } from '../../../../redux/slices/data/cart';
+import store from '../../../../redux/store';
+import { useCustomDispatch } from '../../../../hooks/useCustomDispatch';
+import { Field_2 } from '../../../Common/Fields/2';
+import { Field_3 } from '../../../Common/Fields/3';
+import { Field_1 } from '../../../Common/Fields/1';
 
 export const CartPanel: FC<SVGComponent> = ({ style }) => {
+  const cartSlice = useSelector(cartSelector);
+  const dispatch = useCustomDispatch();
+  useEffect(() => {}, []);
+
   return (
     <div style={{ position: 'absolute', right: 0, top: 76, ...style }}>
       <Styles.Container>
         <div className={Styles.header()}>
-          <span style={{ position: 'relative', opacity: 0.75 }}>Basket of posts</span>
-          <Styles.Counter>12</Styles.Counter>
+          <span style={{ position: 'relative', opacity: 0.75 }}>Cart of posts</span>
+          <Styles.Counter>{cartSlice.total}</Styles.Counter>
         </div>
         <Scrollbar
           buttons={false}
@@ -20,7 +31,7 @@ export const CartPanel: FC<SVGComponent> = ({ style }) => {
             width: '100%',
             display: 'grid',
             gridTemplateColumns: '1fr .05fr',
-            height: '71.7vh',
+            height: '65.7vh',
           }}>
           <div
             style={{
@@ -30,13 +41,35 @@ export const CartPanel: FC<SVGComponent> = ({ style }) => {
               alignItems: 'center',
               rowGap: '1vw',
             }}>
-            {imgs.map((img, i) => (
-              <Card_2 key={i} img={img} order={i + 1} style={{ width: '85%' }} />
+            {cartSlice.posts.map((post, i) => (
+              <Card_2 key={post.id} post={post} order={i + 1} />
             ))}
           </div>
         </Scrollbar>
 
-        <BtnPay style={{ width: '20vw', padding: '2.5vw 0 1vw 0' }} />
+        <div
+          style={{
+            height: '10.5vw',
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'column',
+            gap: '1vw',
+            paddingTop: '1vw',
+          }}>
+          {/* <Field_2
+              sliceValue={postSlice.title}
+              action={setPostTitle}
+              _id={0}
+              inputOptions={{ type: 'text', label: 'header' }}
+              style={{ position: 'relative', left: '50%' }}
+            /> */}
+          <Field_2
+            inputOptions={{ label: 'name', type: 'text' }}
+            action={setCartID}
+            sliceValue={cartSlice.id}
+          />
+          <BtnCollection style={{ width: '20vw' }} />
+        </div>
       </Styles.Container>
     </div>
   );

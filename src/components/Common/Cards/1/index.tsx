@@ -8,9 +8,15 @@ import { getUserDataByID } from '../../../../redux/slices/data/user';
 import { styles as S } from './style';
 import { cssPathes } from '../../../../style';
 import { path } from '../../../../utils/path';
-import { PostModel, loadPostFiles } from '../../../../redux/slices/data/post';
+import {
+  PostModel,
+  getPostLike,
+  loadPostFiles,
+  setPostLike,
+} from '../../../../redux/slices/data/post';
 import { ModelData } from '../../../../interfaces/ModelData';
 import { ModelViewer } from '../../../PostModel/components/ModelViewer';
+import { CardControls } from './controls';
 
 export const Card_1: FC<SVGComponent & PostModel> = ({ style, model, post }) => {
   const [userData, setUserData] = useState<Tables<'users'> | null>(null);
@@ -19,18 +25,13 @@ export const Card_1: FC<SVGComponent & PostModel> = ({ style, model, post }) => 
 
   useEffect(() => {
     try {
-      const getUserData = async () => {
+      const getData = async () => {
         const uid = await dispatch(getUserDataByID(post.user_id)).unwrap();
         setUserData(uid);
       };
-      getUserData();
+      getData();
 
-      console.log({ model, post });
-
-      const loadFiles = async () => {
-        await dispatch(loadPostFiles({ model, post })).unwrap();
-      };
-      loadFiles();
+      dispatch(loadPostFiles({ model, post }));
     } catch (error) {
       console.log(error);
     }
@@ -99,40 +100,7 @@ export const Card_1: FC<SVGComponent & PostModel> = ({ style, model, post }) => 
                   display: mouseOver ? 'block' : void 0,
                   transition: '.15s',
                 }}>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    gap: '.4vw',
-                    position: 'absolute',
-                    left: '15%',
-                    top: '8%',
-                  }}>
-                  <button
-                    style={{ opacity: 1, background: '#181818' }}
-                    onMouseOver={(e) => (e.currentTarget.style.background = '#1e1e1e')}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = '#181818')}>
-                    <p style={{ opacity: 0.75 }}>to collection</p>
-                  </button>
-                  <button
-                    style={{ opacity: 1, background: '#181818' }}
-                    onMouseOver={(e) => (e.currentTarget.style.background = '#1e1e1e')}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = '#181818')}>
-                    <p style={{ opacity: 0.75 }}>like</p>
-                  </button>
-                  <button
-                    style={{ opacity: 1, background: '#181818' }}
-                    onMouseOver={(e) => (e.currentTarget.style.background = '#1e1e1e')}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = '#181818')}>
-                    <p style={{ opacity: 0.75 }}>edit</p>
-                  </button>
-                  <button
-                    style={{ opacity: 1, background: '#181818' }}
-                    onMouseOver={(e) => (e.currentTarget.style.background = '#1e1e1e')}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = '#181818')}>
-                    <p style={{ opacity: 0.75 }}>download</p>
-                  </button>
-                </div>
+                <CardControls post={post} />
               </foreignObject>
             </g>
           </g>
@@ -201,7 +169,7 @@ export const Card_1: FC<SVGComponent & PostModel> = ({ style, model, post }) => 
               stroke-width="0.75"
             />
           </g>
-          <g opacity="0.75">
+          {/* <g opacity="0.75">
             <text
               transform="translate(311.68 171.83)"
               font-size="12"
@@ -209,7 +177,7 @@ export const Card_1: FC<SVGComponent & PostModel> = ({ style, model, post }) => 
               font-family="ISL_FADETOBLAK, ISL_FADE TO BLAK">
               rating
             </text>
-          </g>
+          </g> */}
           <polyline
             points="368.1 171.83 368.1 130.53 377.68 119.2 377.68 111.09"
             fill="none"
@@ -348,7 +316,7 @@ export const Card_1: FC<SVGComponent & PostModel> = ({ style, model, post }) => 
             points="373.25 215.35 370.17 218.14 246.21 217.89 223.85 203.21 223.58 192.22 289.98 192.22 313.01 206.73 358.65 206.45 373.25 206.45 373.25 215.35"
             fill="#161616"
           />
-          <g id="bar">
+          {/* <g id="bar">
             <rect id="bg" x="223.67" y="180.85" width="148.04" height="6.18" fill="#0a0a0a" />
             <rect
               id="percent"
@@ -359,14 +327,14 @@ export const Card_1: FC<SVGComponent & PostModel> = ({ style, model, post }) => 
               fill="#c6b63f"
               opacity="0.75"
             />
-          </g>
+          </g> */}
           <g id="percent_num" opacity="0.75">
             <text
               transform="translate(314.68 202.22)"
               font-size="14"
               fill="#c6b63f"
               font-family="ISL_FADETOBLAK, ISL_FADE TO BLAK">
-              {post?.rating}/100
+              {post?.rating} / 5
             </text>
           </g>
           <circle cx="124.36" cy="4.76" r="1.35" fill="#4d4d4d" opacity="0.25" />

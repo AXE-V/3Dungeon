@@ -293,17 +293,6 @@ app.post('/zip', async (req, res) => {
 app.post('/generate-gltf-jsx', async (req, res) => {
   try {
     const { scene, zip_name, uid } = req.body;
-    // удаление содержимого перед генерацией файлов
-    // fs.readdirSync('./').forEach((file) => {
-    //   if (file === `${path.parse(scene).name}-transformed.glb`) {
-    //     fs.unlinkSync(file);
-    //     console.log(`удален ${file}`);
-    //   }
-    //   if (file === 'scene.tsx') {
-    //     fs.unlinkSync(file);
-    //     console.log(`удален ${file}`);
-    //   }
-    // });
 
     const generationPath = `./public/models/data/${uid}/${path.parse(zip_name).name}/`;
 
@@ -351,80 +340,25 @@ app.post('/generate-gltf-jsx', async (req, res) => {
   }
 });
 
-app.post('/load-gltf-jsx', upload.array('file'), async (req, res) => {
-  try {
-    const zip_name = req.body.zip_name;
-    const uid = req.body.user_id;
-    const generationPath = `./public/models/data/${uid}/${path.parse(zip_name).name}`;
+const uploadMS = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+      const { user_id, zip_name } = req.body;
+      const loadPath = `./public/models/data/${user_id}/${path.parse(zip_name).name}`;
 
-    console.log('начало создания файлов');
-    console.log(req.files);
-    req.files.forEach((f) => {
-      // console.log(f.buffer);
-      if (f.mimetype !== 'application/zip') {
-        if (!fs.existsSync(generationPath)) {
-          fs.mkdirSync(generationPath);
-        }
-
-        fs.copyFile(
-          `./public/models/tmp/${f.originalname}`,
-          `${generationPath}/${f.originalname}`,
-          (err) => (err ? console.log(err) : void 0),
-        );
-
-        fs.unlink(`./public/models/tmp/${f.originalname}`, (err) => {
-          if (err) {
-            console.log(err);
-            return;
-          }
-          console.log(`file ${f.originalname} was deleted`);
-        });
+      if (!fs.existsSync(loadPath)) {
+        fs.mkdirSync(loadPath, { recursive: true });
       }
-    });
-    console.log('файлы созданы');
-
-    res.status(200).json({
-      success: true,
-      message: 'files created',
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      success: false,
-      message: 'error when creating files',
-    });
-  }
+      cb(null, loadPath);
+      console.log('files loaded');
+    },
+    filename: (req, file, cb) => {
+      cb(null, file.originalname);
+    },
+  }),
 });
 
-// // тестовые точки
-// app.post('/upload-model', (req, res) => {
-//   const fileId = randomUUID(); // генерируем уникальный идентификатор загрузки
-
-//   const filePath = `/uploads/${fileId}.stl`; // путь к файлу модели
-
-//   // сохраняем файл модели на сервере
-//   req.pipe(fs.createWriteStream(filePath));
-
-//   // запускаем child_process для генерации файлов модели
-//   const childProcess = spawn('generate-model-files', [filePath]);
-
-//   // возвращаем идентификатор загрузки
-//   res.json({ fileId });
-// });
-
-// app.get('/check-upload-status/:fileId', (req, res) => {
-//   const fileId = req.params.fileId;
-//   const filePath = `/uploads/${fileId}.stl`;
-
-//   // проверяем статус загрузки
-//   if (childProcess.stdout) {
-//     res.json({ status: 'loading' });
-//   } else if (fs.existsSync(filePath)) {
-//     res.json({ status: 'uccess' });
-//   } else {
-//     res.json({ status: 'error' });
-//   }
-// });
+app.post('/load-gltf-jsx', uploadMS.array('file'));
 
 app.get('/', (_, res) => res.send('server'));
 

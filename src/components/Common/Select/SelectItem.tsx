@@ -13,6 +13,9 @@ export const SelectItem: FC<SVGComponent & ISelect> = ({
   setSelectedItem,
   setIsOpen,
   action,
+  isFilter,
+  sliceValue,
+  filterBy,
 }) => {
   const { onMouseLeave, onMouseOver, onClick, itemRef } = useSelectItemElement({
     _id,
@@ -20,6 +23,9 @@ export const SelectItem: FC<SVGComponent & ISelect> = ({
     setSelectedItem,
     setIsOpen,
     action,
+    isFilter,
+    // sliceValue,
+    filterBy,
   });
 
   return (

@@ -4,22 +4,41 @@ import { FC, ReactNode } from 'react';
 import { SVGComponent } from '../../../../interfaces/SVGComponent';
 import { useLocation } from 'react-router-dom';
 import { StyleElements as SE } from '../../../Common/styleElements';
-import { filterAllSelectData } from '../../../Common/Select/data';
+import {
+  filterAllSelectData,
+  filterCategory,
+  filterDate,
+  filterFormat,
+  filterLicense,
+  // filterSortBy,
+  // filterStars,
+} from '../../../Common/Select/data';
 import { Select } from '../../../Common/Select';
+import { useSelector } from 'react-redux';
+import { filterPostBy, postFilterSelector } from '../../../../redux/slices/data/filter';
 
 const FilterPanel: FC<SVGComponent> = ({ style }) => {
   const size = '2vw';
+  const postR = useSelector(postFilterSelector);
+
   return (
     <div className={styles.container()} style={{ ...style, transition: '.2s ease-out' }}>
       <div className={styles.group()}>
-        {filterAllSelectData.map((data, i) => (
-          <Select data={data} key={i} lskey="filter" />
+        {filterAllSelectData.map((data) => (
+          <Select
+            data={data}
+            key={Object.keys(data)[0]}
+            filterBy={Object.keys(data)[0]}
+            style={{ height: size, fontSize: '0.8vw' }}
+            sliceValue={postR[Object.values(data)[0]]}
+            action={filterPostBy}
+            isFilter
+          />
         ))}
-        {/* <SE.Button>delete selected</SE.Button> */}
       </div>
 
       <div className={styles.group()}>
-        <BtnReset style={{ height: size }} />
+        <BtnReset style={{ height: size, cursor: 'pointer', userSelect: 'none' }} />
       </div>
     </div>
   );

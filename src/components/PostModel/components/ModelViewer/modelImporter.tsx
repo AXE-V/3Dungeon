@@ -14,7 +14,6 @@ export const modelImporter = (post: ModelImporter) => {
       const pathModel = `/public/models/data/${post.user_id}/${getName(post.zip_name)}/scene.tsx`;
       import(`${pathModel}`).then((d) => {
         const modelProps: GroupProps = { scale: 30 };
-        d.Model as RefObject<JSX.Element>;
         setModel(() => d.Model(modelProps));
       });
     } catch (error) {

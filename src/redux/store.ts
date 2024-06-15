@@ -3,6 +3,8 @@ import { inputR } from './slices/visual/input';
 import { signR } from './slices/visual/sign';
 import { userR } from './slices/data/user';
 import { postR } from './slices/data/post';
+import { postFilterR } from './slices/data/filter';
+import { cartR } from './slices/data/cart';
 // import localStorageMiddleware from './middleware/localStorage';
 import {
   persistReducer,
@@ -28,6 +30,8 @@ const rootReducer = combineReducers({
   // данные
   userR,
   postR,
+  postFilterR,
+  cartR,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

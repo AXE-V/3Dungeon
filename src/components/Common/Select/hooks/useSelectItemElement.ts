@@ -2,21 +2,25 @@ import { ActionCreator } from '@reduxjs/toolkit';
 import { SyntheticEvent, useEffect, useRef } from 'react';
 import { useCustomDispatch } from '../../../../hooks/useCustomDispatch';
 import { styleController } from '../../../../utils/styleController';
+import { ISelect } from '../../../../interfaces/ISelect';
 
-type Props = {
-  _id?: any;
-  selectedItem?: any;
-  setSelectedItem?: (val: any) => void;
-  setIsOpen?: (val: any) => void;
-  action?: ActionCreator<any>;
-};
+// type Props = {
+//   isFilter?: boolean;
+//   _id?: any;
+//   selectedItem?: any;
+//   setSelectedItem?: (val: any) => void;
+//   setIsOpen?: (val: any) => void;
+//   action?: ActionCreator<any>;
+// };
 export const useSelectItemElement = ({
   _id,
   selectedItem,
   setSelectedItem,
   setIsOpen,
   action,
-}: Props) => {
+  isFilter,
+  filterBy,
+}: ISelect) => {
   const itemRef = useRef(null);
   const dispatch = useCustomDispatch();
 
@@ -54,7 +58,15 @@ export const useSelectItemElement = ({
 
   function onClick<E extends SyntheticEvent<EventTarget>>(e: E) {
     setSelectedItem?.(_id);
-    dispatch(action?.(_id));
+    if (isFilter) {
+      // const exec = async () => {
+      //   const data = await dispatch(action?.({ filterBy, filterValue: _id }));
+      // };
+      // exec();
+      console.log('filter');
+    } else {
+      dispatch(action?.(_id));
+    }
     styleController({
       target: (e.currentTarget as HTMLElement).childNodes[1].childNodes,
       command: 'add',
