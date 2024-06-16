@@ -11,6 +11,7 @@ import { randomUUID } from 'crypto';
 // import { importFile } from './importFile.js';
 import { supabase } from './supabase.js';
 import { uploadFile } from './utils/uploadFile.js';
+import os from 'os';
 
 const app = express();
 const port = 4200;
@@ -93,72 +94,6 @@ app.post('/unzip', upload.single('zip'), async (req, res) => {
   }
 });
 
-// app.post('/unzip', upload.single('zip'), async (req, res) => {
-//   try {
-//     if (req.file) {
-//       // Текущий путь архива
-//       const zipPath = req.file.path;
-//       const zipName = req.file.filename;
-//       const extractPath = path.resolve(__dname, '../..', 'public/models/uploads');
-//       const allowedExtensions = ['.jpeg', '.png', '.bin', '.gltf', '.glb'];
-//       let scenePath = '';
-//       let sceneFormat = '';
-
-//       // Удаление директории перед разархивированием
-//       if (fs.existsSync(extractPath)) {
-//         fs.rmSync(extractPath, { recursive: true, force: true });
-//         console.log(`удалена директория ${extractPath}`);
-//       }
-
-//       const zip = new AdmZip(zipPath);
-
-//       // Разархивация архива
-//       zip.getEntries().forEach((zipEntry) => {
-//         // поиск сцены
-//         allowedExtensions.slice(3).forEach((ext) => {
-//           if (ext === path.extname(zipEntry.name)) {
-//             scenePath = path.join('/models/uploads', zipEntry.entryName).replace(/\\/g, '/');
-//             sceneFormat = path.extname(zipEntry.name);
-//           }
-//         });
-
-//         // извлечение разрешенных файлов
-//         allowedExtensions.forEach((ext) => {
-//           if (ext === path.extname(zipEntry.name)) {
-//             zip.extractEntryTo(zipEntry, extractPath, true);
-//           }
-//         });
-//       });
-//       console.log(`aрхив разархивирован ${zipPath}`);
-
-//       // Удаление архива после разархивирования
-//       fs.unlinkSync(zipPath);
-//       console.log(`aрхив удален ${zipPath}`);
-
-//       res.status(200).json({
-//         success: true,
-//         message: 'file loaded',
-//         zip_name: zipName,
-//         scene: {
-//           path: scenePath,
-//           format: sceneFormat,
-//         },
-//       });
-//     } else {
-//       res.status(400).json({
-//         success: false,
-//         message: 'error loading file',
-//       });
-//     }
-//   } catch (error) {
-//     res.status(400).json({
-//       success: false,
-//       message: 'unzip error',
-//     });
-//     console.error('unzip error', error);
-//   }
-// });
-
 app.post('/zip', async (req, res) => {
   const zipPath = path.join(__dname, '../..', 'public/models/uploads/');
   const zip = new AdmZip();
@@ -218,78 +153,6 @@ app.post('/zip', async (req, res) => {
   }
 });
 
-// app.post('/zip', async (req, res) => {
-//   req.socket.setTimeout;
-//   const zipPath = path.join(__dname, '../..', 'public/models/uploads/');
-//   const zip = new AdmZip();
-
-//   console.log('Чтение данных началось');
-//   fs.readdirSync(zipPath).forEach((file) => {
-//     const filePath = `${zipPath}${file}`;
-//     const stats = fs.statSync(filePath);
-//     if (stats.isDirectory()) {
-//       zip.addLocalFolder(filePath, file);
-//     } else {
-//       zip.addLocalFile(filePath, file);
-//     }
-//   });
-//   console.log('Чтение данных завершено');
-
-//   const zipBuffer = zip.toBuffer();
-
-//   try {
-//     const { zip_name, uid, postData, modelData } = req.body;
-
-//     const zipFolderName = path.parse(zip_name).name;
-
-//     const glb = new File([modelData.glb], 'scene-transformed.glb', { type: 'model/gltf-binary' });
-//     const tsx = new File([modelData.tsx], 'scene.tsx', { type: 'application/typescript' });
-
-//     console.log('сохранение данных');
-
-//     const res1 = await supabase.from('models').insert(postData);
-//     if (res1.error) {
-//       console.log(res1.error);
-//     }
-//     console.log(res1.data);
-
-//     const res2 = await supabase.storage
-//       .from('models')
-//       .upload(`${uid}/${zipFolderName}/${glb.name}`, glb, { contentType: glb.type });
-//     if (res2.error) {
-//       console.log(res2.error);
-//     }
-//     console.log(res2.data);
-
-//     const res3 = await supabase.storage
-//       .from('models')
-//       .upload(`${uid}/${zipFolderName}/${tsx.name}`, tsx, { contentType: tsx.type });
-//     if (res3.error) {
-//       console.log(res3.error);
-//     }
-//     console.log(res3.data);
-
-//     const res4 = await supabase.storage
-//       .from('models')
-//       .upload(`${uid}/${zipFolderName}/${zip_name}`, zipBuffer, {
-//         contentType: 'application/zip',
-//       });
-//     if (res4.error) {
-//       console.log(res4.error);
-//     }
-//     console.log(res4.data);
-
-//     res.status(200).json({
-//       success: true,
-//       message: 'files uploaded successfully to Supabase storage',
-//     });
-//   } catch (error) {
-//     console.error('ошибка загрузки данных в хранилище (catch)');
-//     console.log(error);
-//     res.status(500).json({ success: false, message: 'Error uploading to Supabase storage' });
-//   }
-// });
-
 app.post('/generate-gltf-jsx', async (req, res) => {
   try {
     const { scene, zip_name, uid } = req.body;
@@ -340,6 +203,22 @@ app.post('/generate-gltf-jsx', async (req, res) => {
   }
 });
 
+app.post('/check-path-generated', async (req, res) => {
+  const { post } = req.body;
+  const loadPath = `./public/models/data/${post.user_id}/${path.parse(post.zip_name).name}`;
+  if (fs.existsSync(loadPath)) {
+    res.status(500).json({
+      success: false,
+      message: 'path exists',
+    });
+  } else {
+    res.status(200).json({
+      success: true,
+      message: 'path loaded',
+    });
+  }
+});
+
 const uploadMS = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
@@ -359,6 +238,31 @@ const uploadMS = multer({
 });
 
 app.post('/load-gltf-jsx', uploadMS.array('file'));
+
+app.post('/download-zip', async (req, res) => {
+  try {
+    const { post } = req.body;
+    const { data: blob } = await supabase.storage
+      .from('models')
+      .download(`${post.user_id}/${path.parse(post.zip_name).name}/${post.zip_name}`);
+
+    const buf = Buffer.from(await blob.arrayBuffer());
+    fs.writeFile(path.join(os.homedir(), 'Downloads', post.zip_name), buf, (err) => {
+      if (err) throw err;
+      console.log('файл загружен');
+    });
+    res.status(200).json({
+      success: true,
+      message: 'file downloaded',
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'error when file downloads',
+    });
+    console.log(error);
+  }
+});
 
 app.get('/', (_, res) => res.send('server'));
 

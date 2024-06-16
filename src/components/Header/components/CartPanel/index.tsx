@@ -1,10 +1,11 @@
+//@ts-nocheck
 import { FC, useEffect } from 'react';
 import { SVGComponent } from '../../../../interfaces/SVGComponent';
 import { Styles } from './style';
 import { Scrollbar } from '../../../Common/Scroll';
 import { Card_2 } from '../../../Common/Cards/2';
 import BtnCollection from './components/BtnCollection';
-import { imgs } from '../../../Catalog/sample';
+
 import { useSelector } from 'react-redux';
 import { cartSelector, setCartID } from '../../../../redux/slices/data/cart';
 import store from '../../../../redux/store';
@@ -56,13 +57,6 @@ export const CartPanel: FC<SVGComponent> = ({ style }) => {
             gap: '1vw',
             paddingTop: '1vw',
           }}>
-          {/* <Field_2
-              sliceValue={postSlice.title}
-              action={setPostTitle}
-              _id={0}
-              inputOptions={{ type: 'text', label: 'header' }}
-              style={{ position: 'relative', left: '50%' }}
-            /> */}
           <Field_2
             inputOptions={{ label: 'name', type: 'text' }}
             action={setCartID}

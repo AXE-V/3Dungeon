@@ -1,6 +1,7 @@
-import { css, styled } from "../../../stitches.config"
+import { css, styled } from '../../../stitches.config';
+import { cssPathes } from '../../style';
 
-const Styles = {
+export const Styles = {
   CardContainer: styled('section', {
     position: 'relative',
     display: 'grid',
@@ -8,9 +9,9 @@ const Styles = {
     justifyItems: 'center',
     gridTemplateColumns: 'repeat(4, 1fr)',
     gap: '1vw',
-    margin: '6vw 5vw 0 5vw'
+    margin: '6vw 5vw 0 5vw',
   }),
-  
+
   cellContainer: css({
     position: 'absolute',
     left: '8vw',
@@ -23,7 +24,23 @@ const Styles = {
     columnGap: '1vw',
     rowGap: '1vw',
     opacity: '.4',
-  })
-}
+  }),
 
-export default Styles
+  button: styled('button', {
+    fontFamily: '$blak',
+    padding: '.5vw .7vw',
+    background: '$dark4',
+    border: '2px solid $dark6',
+    color: '$accent1',
+    opacity: 0.75,
+    fontSize: '2vw',
+    transition: '.15s ease-out',
+    aspectRatio: '16/9',
+    width: '100%',
+    clipPath: 'none',
+    borderRadius: '-10px',
+    '&:hover': {
+      background: '$dark5',
+    },
+  }),
+};

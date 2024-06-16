@@ -5,6 +5,7 @@ import { ISelect } from '../../../interfaces/ISelect';
 import { SVGComponent } from '../../../interfaces/SVGComponent';
 import { useSelectElement } from './hooks/useSelectElement';
 import { useCustomDispatch } from '../../../hooks/useCustomDispatch';
+import { useLocation } from 'react-router-dom';
 
 export const Select: FC<SVGComponent & ISelect> = ({
   style,
@@ -15,9 +16,14 @@ export const Select: FC<SVGComponent & ISelect> = ({
   isFilter,
 }) => {
   const { isOpen, setIsOpen, onClick, onMouseLeave, onMouseOver } = useSelectElement();
+  const { pathname } = useLocation();
 
   const dataKey = Object.keys(data ?? []);
-  const dataValue = Object.values(data ?? []).flat();
+  const dataValue = isFilter
+    ? Object.values(data ?? []).flat()
+    : Object.values(data ?? [])
+        .flat()
+        .slice(1);
 
   const initValue = () => {
     if (typeof sliceValue === 'string' && sliceValue.length > 0) {
@@ -37,6 +43,7 @@ export const Select: FC<SVGComponent & ISelect> = ({
         <Styles.SelectContainer>
           {dataValue?.map((item) => (
             <SelectItem
+              pathname={pathname}
               filterBy={filterBy}
               sliceValue={sliceValue}
               action={action}

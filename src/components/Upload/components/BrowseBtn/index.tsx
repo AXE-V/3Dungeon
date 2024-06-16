@@ -3,7 +3,7 @@ import { SVGComponent } from '../../../../interfaces/SVGComponent';
 import { styleController } from '../../../../utils/styleController';
 import { useNavigate } from 'react-router-dom';
 import { useCustomDispatch } from '../../../../hooks/useCustomDispatch.ts';
-import { generateGLTFJSX, unzipPostData } from '../../../../redux/slices/data/post.ts';
+import { generateGLTFJSX, unzipPostData } from '../../../../redux/slices/data/post/index.ts';
 import { path } from '../../../../utils/path.ts';
 
 export const BrowseBtn: FC<SVGComponent> = ({ style, user }) => {

@@ -524,7 +524,7 @@ export const Card_2: FC<SVGComponent & PostModel> = ({ style, order, post }) => 
               points="251.36 142.97 249.32 144.81 167.16 144.65 152.34 134.92 152.16 127.63 196.17 127.63 211.43 137.25 241.68 137.07 251.36 137.07 251.36 142.97"
               fill="#161616"
             />
-            <g id="rating_num" opacity="0.75">
+            {/* <g id="rating_num" opacity="0.75">
               <text
                 transform="translate(212.54 134.26)"
                 font-size="9.27"
@@ -532,7 +532,7 @@ export const Card_2: FC<SVGComponent & PostModel> = ({ style, order, post }) => 
                 font-family="ISL_FADETOBLAK, ISL_FADE TO BLAK">
                 {post.rating} / 5
               </text>
-            </g>
+            </g> */}
             <circle cx="86.39" cy="3.41" r="0.89" fill="#4d4d4d" opacity="0.25" />
             <circle cx="89.37" cy="3.41" r="0.89" fill="#4d4d4d" opacity="0.1" />
           </g>

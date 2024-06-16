@@ -12,6 +12,7 @@ import { Upload } from './components/Upload';
 import { EditPostModel } from './components/PostModel/Edit';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { NotFound } from './components/NotFound';
+import { OpenPostModel } from './components/PostModel/Open';
 
 function App() {
   globalStyles();
@@ -51,19 +52,35 @@ function App() {
                 }
               />
               <Route
-                path="/user/:login/likes/:id"
+                path="/user/:login/collections/:collection_id"
                 element={
                   <ProtectedRoute>
-                    <EditPostModel />
+                    <Catalog />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/user/:login/collections/:collection_id/:post_id"
+                element={
+                  <ProtectedRoute>
+                    <OpenPostModel />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/user/:login/likes/:post_id"
+                element={
+                  <ProtectedRoute>
+                    <OpenPostModel />
                   </ProtectedRoute>
                 }
               />
               <Route path="/user/:login/3d-models" element={<Catalog />} />
               <Route
-                path="/user/:login/3d-models/:id"
+                path="/user/:login/3d-models/:post_id"
                 element={
                   <ProtectedRoute>
-                    <EditPostModel />
+                    <OpenPostModel />
                   </ProtectedRoute>
                 }
               />
@@ -75,14 +92,14 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route
-                path="/user/:login/edit-post/:id"
+              {/* <Route
+                path="/user/:login/edit-post/:post_id"
                 element={
                   <ProtectedRoute>
                     <EditPostModel />
                   </ProtectedRoute>
                 }
-              />
+              /> */}
             </Route>
           </Route>
           <Route path="/" element={<ContentLayout />}>

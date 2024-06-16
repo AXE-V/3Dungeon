@@ -8,12 +8,7 @@ import { getUserDataByID } from '../../../../redux/slices/data/user';
 import { styles as S } from './style';
 import { cssPathes } from '../../../../style';
 import { path } from '../../../../utils/path';
-import {
-  PostModel,
-  getPostLike,
-  loadPostFiles,
-  setPostLike,
-} from '../../../../redux/slices/data/post';
+import { PostModel, loadPostFiles } from '../../../../redux/slices/data/post';
 import { ModelData } from '../../../../interfaces/ModelData';
 import { ModelViewer } from '../../../PostModel/components/ModelViewer';
 import { CardControls } from './controls';
@@ -100,7 +95,7 @@ export const Card_1: FC<SVGComponent & PostModel> = ({ style, model, post }) => 
                   display: mouseOver ? 'block' : void 0,
                   transition: '.15s',
                 }}>
-                <CardControls post={post} />
+                <CardControls post={post} model={model} />
               </foreignObject>
             </g>
           </g>
@@ -328,7 +323,7 @@ export const Card_1: FC<SVGComponent & PostModel> = ({ style, model, post }) => 
               opacity="0.75"
             />
           </g> */}
-          <g id="percent_num" opacity="0.75">
+          {/* <g id="percent_num" opacity="0.75">
             <text
               transform="translate(314.68 202.22)"
               font-size="14"
@@ -336,7 +331,7 @@ export const Card_1: FC<SVGComponent & PostModel> = ({ style, model, post }) => 
               font-family="ISL_FADETOBLAK, ISL_FADE TO BLAK">
               {post?.rating} / 5
             </text>
-          </g>
+          </g> */}
           <circle cx="124.36" cy="4.76" r="1.35" fill="#4d4d4d" opacity="0.25" />
           <circle cx="128.86" cy="4.76" r="1.35" fill="#4d4d4d" opacity="0.1" />
         </g>

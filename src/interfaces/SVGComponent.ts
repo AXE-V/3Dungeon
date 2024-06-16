@@ -9,6 +9,7 @@ export interface Basics {
   refference?: MutableRefObject<any>;
   sliceValue?: any;
   action?: ActionCreator<any>;
+  pathname?: string;
 }
 
 interface UserData {

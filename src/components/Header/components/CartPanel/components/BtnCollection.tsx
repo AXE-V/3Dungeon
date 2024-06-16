@@ -1,8 +1,9 @@
+//@ts-nocheck
 import { FC } from 'react';
 import { SVGComponent } from '../../../../../interfaces/SVGComponent';
 import { useCustomDispatch } from '../../../../../hooks/useCustomDispatch';
 import { useSelector } from 'react-redux';
-import { cartSelector, createCollection } from '../../../../../redux/slices/data/cart';
+import { cartSelector, clearCart, createCollection } from '../../../../../redux/slices/data/cart';
 import { useAuth } from '../../../../../providers/authProvider';
 
 export const BtnCollection: FC<SVGComponent> = ({ style }) => {
@@ -21,6 +22,7 @@ export const BtnCollection: FC<SVGComponent> = ({ style }) => {
       const create = async () => {
         const data = await dispatch(createCollection(preparedData)).unwrap();
         console.log(data);
+        dispatch(clearCart());
       };
       create();
     } catch (error) {

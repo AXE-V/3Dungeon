@@ -1,5 +1,5 @@
 // import { BgGradient, Cell, MainBodyDecor } from '../../assets/decor/nonInteractive';
-// import Styles from './style.js';
+// import { Styles as S } from './style.js';
 // import { Card_1 } from '../Common/Cards/1';
 // import { BtnNextBack } from '../Common/BtnNextBack';
 // import { useEffect, useState } from 'react';
@@ -10,69 +10,82 @@
 // import { useAuth } from '../../providers/authProvider.js';
 // import {
 //   PostModel,
+//   getAllPosts,
 //   getLikedPosts,
+//   getPostCollections,
+//   // getPostCollections,
 //   getUserPosts,
 //   postSelectorZipName,
-// } from '../../redux/slices/data/post.js';
+// } from '../../redux/slices/data/post/index.js';
 // import { useCustomDispatch } from '../../hooks/useCustomDispatch.js';
 // import { NotFound } from '../NotFound.js';
 // import { usePathValidate } from '../../hooks/usePathValidate.js';
 // import { CardRender } from './CardRender.js';
-// import { path } from '../../utils/path.js';
-// import axios from '../../redux/axios.ts';
+// import { useCatalogPathes } from './hooks/pathes.js';
+// import {
+//   postFilterSelector,
+//   setCatalogData,
+//   setCatalogPath,
+// } from '../../redux/slices/data/filter.js';
+// import { pathVariantFn } from './hooks/pathVariantFn.js';
 
 // const Catalog = () => {
 //   const { user } = useAuth();
-//   const dispatch = useCustomDispatch();
 //   const validatePathes = usePathValidate();
-//   const [fetchedData, setFetchedData] = useState<PostModel[]>();
-//   const [isFetched, setIsFetched] = useState(false);
+//   const { pathname } = useLocation();
+//   const postFilterSlice = useSelector(postFilterSelector);
+//   const pathes = useCatalogPathes();
+//   const { pathFunction, labelPath, dispatch } = pathVariantFn();
 
-//   const rootPathFn = async () => {};
-//   const modelsPathFn = async () => {
-//     try {
-//       if (isFetched) return;
-//       const userPosts = await dispatch(getUserPosts(user?.id!)).unwrap();
-//       setTimeout(() => {
-//         setFetchedData(userPosts);
-//       }, 1000);
-
-//       setIsFetched(true);
-//     } catch (error) {
-//       console.log(error);
+//   useEffect(() => {
+//     switch (pathname) {
+//       case pathes.root:
+//         pathFunction({ cb: () => getAllPosts(), path: pathes.root, pathLabel: 'main page' });
+//         break;
+//       case pathes.collections:
+//         pathFunction({
+//           cb: () => getPostCollections(user?.id!),
+//           path: pathes.collections,
+//           pathLabel: 'collections',
+//         });
+//         break;
+//       case pathes.models:
+//         pathFunction({
+//           cb: () => getUserPosts(user?.id!),
+//           path: pathes.models,
+//           pathLabel: 'models',
+//         });
+//         break;
+//       case pathes.likes:
+//         pathFunction({
+//           cb: () => getLikedPosts(user?.id!),
+//           path: pathes.likes,
+//           pathLabel: 'likes',
+//         });
+//         break;
 //     }
-//   };
-
-//   const likesPathFn = async () => {
-//     try {
-//       if (isFetched) return;
-//       const data = await dispatch(getLikedPosts(user?.id!)).unwrap();
-//       console.log(data);
-//       setIsFetched(true);
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
-
-//   const catalogPathes = [
-//     { path: `/`, fn: rootPathFn },
-//     { path: `/user/${user?.user_metadata.login}/3d-models`, fn: modelsPathFn },
-//     { path: `/user/${user?.user_metadata.login}/likes`, fn: likesPathFn },
-//   ];
+//     console.log(postFilterSlice);
+//   }, []);
 
 //   return (
 //     <>
-//       {!validatePathes(catalogPathes) ? (
+//       {!validatePathes(Object.values(pathes)) ? (
 //         <NotFound />
 //       ) : (
 //         <div>
-//           <Styles.CardContainer>
-//             {fetchedData && <CardRender data={fetchedData} />}
-//           </Styles.CardContainer>
+//           <h1 style={{ position: 'absolute', left: '5.2vw', top: '6.5vw', opacity: 0.75 }}>
+//             {labelPath}
+//           </h1>
+//           <S.CardContainer>
+//             {/* {fetchedData && <CardRender data={fetchedData} />} */}
+//             {postFilterSlice.filteredCatalogData && (
+//               <CardRender data={postFilterSlice.filteredCatalogData} />
+//             )}
+//           </S.CardContainer>
 //           <section>
 //             <BtnNextBack style={{ left: '.6vw' }} />
 //             <BtnNextBack style={{ right: '.6vw', rotate: '180deg' }} />
-//             <div className={Styles.cellContainer()}>
+//             <div className={S.cellContainer()}>
 //               <Cell />
 //               <Cell />
 //               <Cell />
@@ -90,126 +103,98 @@
 // export default Catalog;
 
 import { BgGradient, Cell, MainBodyDecor } from '../../assets/decor/nonInteractive';
-import Styles from './style.js';
+import { Styles as S } from './style.js';
 import { Card_1 } from '../Common/Cards/1';
 import { BtnNextBack } from '../Common/BtnNextBack';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispath } from '../../redux/store.js';
 import { supabase } from '../../supabase.js';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../providers/authProvider.js';
 import {
   PostModel,
   getAllPosts,
   getLikedPosts,
   getPostCollections,
+  // getPostCollections,
   getUserPosts,
   postSelectorZipName,
-} from '../../redux/slices/data/post.js';
+} from '../../redux/slices/data/post/index.js';
 import { useCustomDispatch } from '../../hooks/useCustomDispatch.js';
 import { NotFound } from '../NotFound.js';
 import { usePathValidate } from '../../hooks/usePathValidate.js';
 import { CardRender } from './CardRender.js';
+import { useCatalogPathes } from './hooks/pathes.js';
+import {
+  postFilterSelector,
+  setCatalogData,
+  setCatalogPath,
+} from '../../redux/slices/data/filter.js';
+import { pathVariantFn } from './hooks/pathVariantFn.js';
+import { path } from '../../utils/path.js';
 
 const Catalog = () => {
   const { user } = useAuth();
-  const dispatch = useCustomDispatch();
-  const validatePathes = usePathValidate();
   const { pathname } = useLocation();
-  const [fetchedData, setFetchedData] = useState<PostModel[]>();
-  const [currentPath, setCurrentPath] = useState('');
-
-  const pathes = {
-    root: `/`,
-    collections: `/user/${user?.user_metadata.login}/collections`,
-    models: `/user/${user?.user_metadata.login}/3d-models`,
-    likes: `/user/${user?.user_metadata.login}/likes`,
-  };
+  const postFilterSlice = useSelector(postFilterSelector);
+  const { pathes, collectionName } = useCatalogPathes();
+  const { pathFunction, labelPath, dispatch } = pathVariantFn();
 
   useEffect(() => {
     switch (pathname) {
       case pathes.root:
-        const rootPathFn = async () => {
-          const data = await dispatch(getAllPosts()).unwrap();
-          setCurrentPath('main page');
-          console.log(data);
-          setTimeout(() => {
-            setFetchedData(data);
-          }, 1500);
-        };
-        rootPathFn();
+        pathFunction({ cb: () => getAllPosts(), path: pathes.root, pathLabel: 'main page' });
         break;
       case pathes.collections:
-        const collectionsPathFn = async () => {
-          const data = await dispatch(getPostCollections(user?.id!)).unwrap();
-          setCurrentPath('collections');
-          console.log(data);
-          setTimeout(() => {
-            setFetchedData(data);
-          }, 1500);
-        };
-        collectionsPathFn();
+        pathFunction({
+          cb: () => getPostCollections(user?.id!),
+          path: pathes.collections,
+          pathLabel: 'collections',
+        });
         break;
       case pathes.models:
-        const modelsPathFn = async () => {
-          try {
-            const data = await dispatch(getUserPosts(user?.id!)).unwrap();
-            setCurrentPath('models');
-            console.log(data);
-            setTimeout(() => {
-              setFetchedData(data);
-            }, 1500);
-          } catch (error) {
-            console.log(error);
-          }
-        };
-        modelsPathFn();
+        pathFunction({
+          cb: () => getUserPosts(user?.id!),
+          path: pathes.models,
+          pathLabel: 'models',
+        });
         break;
       case pathes.likes:
-        const likesPathFn = async () => {
-          try {
-            const data = await dispatch(getLikedPosts(user?.id!)).unwrap();
-            setCurrentPath('likes');
-            console.log(data);
-            setTimeout(() => {
-              setFetchedData(data);
-            }, 1500);
-          } catch (error) {
-            console.log(error);
-          }
-        };
-        likesPathFn();
+        pathFunction({
+          cb: () => getLikedPosts(user?.id!),
+          path: pathes.likes,
+          pathLabel: 'likes',
+        });
         break;
     }
+    console.log(postFilterSlice);
   }, []);
 
   return (
     <>
-      {!validatePathes(Object.values(pathes)) ? (
-        <NotFound />
-      ) : (
-        <div>
-          <h1 style={{ position: 'absolute', left: '5.2vw', top: '6.5vw', opacity: 0.75 }}>
-            {currentPath}
-          </h1>
-          <Styles.CardContainer>
-            {fetchedData && <CardRender data={fetchedData} />}
-          </Styles.CardContainer>
-          <section>
-            <BtnNextBack style={{ left: '.6vw' }} />
-            <BtnNextBack style={{ right: '.6vw', rotate: '180deg' }} />
-            <div className={Styles.cellContainer()}>
-              <Cell />
-              <Cell />
-              <Cell />
-              <Cell />
-            </div>
-            <BgGradient />
-            <MainBodyDecor />
-          </section>
-        </div>
-      )}
+      <div>
+        <h1 style={{ position: 'absolute', left: '5.2vw', top: '6.5vw', opacity: 0.75 }}>
+          {labelPath} {collectionName}
+        </h1>
+        <S.CardContainer>
+          {postFilterSlice.filteredCatalogData && (
+            <CardRender data={postFilterSlice.filteredCatalogData} />
+          )}
+        </S.CardContainer>
+        <section>
+          <BtnNextBack style={{ left: '.6vw' }} />
+          <BtnNextBack style={{ right: '.6vw', rotate: '180deg' }} />
+          <div className={S.cellContainer()}>
+            <Cell />
+            <Cell />
+            <Cell />
+            <Cell />
+          </div>
+          <BgGradient />
+          <MainBodyDecor />
+        </section>
+      </div>
     </>
   );
 };

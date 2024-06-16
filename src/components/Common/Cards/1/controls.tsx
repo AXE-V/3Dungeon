@@ -1,17 +1,27 @@
 import { useEffect, useState } from 'react';
 import { useCustomDispatch } from '../../../../hooks/useCustomDispatch';
-import { getPostLike, setPostLike } from '../../../../redux/slices/data/post';
+import {
+  PostModel,
+  downloadModel,
+  getCollectionID,
+  getPostLike,
+  setAllPostData,
+  setPostLike,
+} from '../../../../redux/slices/data/post';
 import { Tables } from '../../../../interfaces/DatabaseGeneratedTypes';
 import { useAuth } from '../../../../providers/authProvider';
 import { addCartItem } from '../../../../redux/slices/data/cart';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useCatalogPathes } from '../../../Catalog/hooks/pathes';
+import { getUserDataByID } from '../../../../redux/slices/data/user';
 
-type Props = {
-  post: Tables<'models'>;
-};
-export const CardControls = ({ post }: Props) => {
+export const CardControls = ({ post, model }: PostModel) => {
   const dispatch = useCustomDispatch();
   const [like, setLike] = useState(false);
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const { pathes, collectionName } = useCatalogPathes();
+  const { pathname } = useLocation();
 
   useEffect(() => {
     const likeFn = async () => {
@@ -29,6 +39,33 @@ export const CardControls = ({ post }: Props) => {
 
   const onAddCartItem = async () => {
     dispatch(addCartItem(post));
+  };
+
+  const onDownload = async () => {
+    const data = await dispatch(downloadModel(post)).unwrap();
+    console.log(data);
+  };
+
+  const onOpen = () => {
+    const getData = async () => {
+      const userData = await dispatch(getUserDataByID(user?.id!)).unwrap();
+      dispatch(setAllPostData(post));
+      switch (pathname) {
+        case pathes.root:
+          navigate(`/user/${userData.login}/3d-models/${post.title}`);
+          break;
+        case `${pathes.collections}/${collectionName}`:
+          navigate(`/user/${userData.login}/collections/${collectionName}/${post.title}`);
+          break;
+        case pathes.models:
+          navigate(`/user/${userData.login}/3d-models/${post.title}`);
+          break;
+        case pathes.likes:
+          navigate(`/user/${userData.login}/likes/${post.title}`);
+          break;
+      }
+    };
+    getData();
   };
 
   return (
@@ -51,10 +88,10 @@ export const CardControls = ({ post }: Props) => {
         style={{ opacity: 1, background: like ? '#c6b63f' : '#181818', cursor: 'pointer' }}>
         <p style={{ opacity: 0.75 }}>{like ? 'liked' : 'like'}</p>
       </button>
-      <button style={{ opacity: 1, background: '#181818', cursor: 'pointer' }}>
-        <p style={{ opacity: 0.75 }}>edit</p>
+      <button onClick={onOpen} style={{ opacity: 1, background: '#181818', cursor: 'pointer' }}>
+        <p style={{ opacity: 0.75 }}>open</p>
       </button>
-      <button style={{ opacity: 1, background: '#181818', cursor: 'pointer' }}>
+      <button onClick={onDownload} style={{ opacity: 1, background: '#181818', cursor: 'pointer' }}>
         <p style={{ opacity: 0.75 }}>download</p>
       </button>
     </div>
