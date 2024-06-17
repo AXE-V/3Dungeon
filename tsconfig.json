@@ -20,6 +20,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "stitches.config.ts", "public/models/gltf/model.tsx"],
+  "include": ["src", "stitches.config.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
