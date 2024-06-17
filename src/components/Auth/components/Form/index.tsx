@@ -1,9 +1,9 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Field_1 } from '../../../Common/Fields/1';
 import { Styles } from './style';
 import { SignConfirm } from '../SignConfirm';
-import { useEffect, useState } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useEffect } from 'react';
+import { SubmitHandler } from 'react-hook-form';
 import { FormInputs, getFieldsOptions } from './options';
 import { useRegLog } from './hooks/useRegLog';
 import { Message } from '../../../Common/Message';
@@ -14,17 +14,7 @@ export const FormRegLog = () => {
   const fields = getFieldsOptions();
   const navigate = useNavigate();
   const { session } = useAuth();
-  const {
-    handleSubmit,
-    innerSubmit,
-    register,
-    errors,
-    authError,
-    setAuthError,
-    loading,
-    isSucces,
-    setSucces,
-  } = useRegLog();
+  const { handleSubmit, innerSubmit, register, errors, authError, loading, isSucces } = useRegLog();
 
   const onSubmit: SubmitHandler<FormInputs> = (params) => {
     innerSubmit(params);

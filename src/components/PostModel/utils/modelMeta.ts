@@ -1,6 +1,6 @@
-import { ObjectMap, useThree } from '@react-three/fiber';
+import { ObjectMap } from '@react-three/fiber';
 import { GLTF } from 'three/examples/jsm/Addons.js';
-import THREE, { BufferAttribute, Mesh, NormalBufferAttributes } from 'three';
+import { Mesh } from 'three';
 
 export const modelMeta = (model: GLTF & ObjectMap) => {
   try {

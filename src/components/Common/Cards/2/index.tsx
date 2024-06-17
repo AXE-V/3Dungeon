@@ -3,7 +3,7 @@ import { SVGComponent } from '../../../../interfaces/SVGComponent';
 import { Tables } from '../../../../interfaces/DatabaseGeneratedTypes';
 import { useCustomDispatch } from '../../../../hooks/useCustomDispatch';
 import { getUserDataByID } from '../../../../redux/slices/data/user';
-import { PostModel, loadPostFiles } from '../../../../redux/slices/data/post';
+import { PostModel } from '../../../../redux/slices/data/post';
 import { ModelViewer } from '../../../PostModel/components/ModelViewer';
 import { cssPathes } from '../../../../style';
 import { styleController } from '../../../../utils/styleController';
@@ -64,7 +64,6 @@ export const Card_2: FC<SVGComponent & PostModel> = ({ style, order, post }) => 
         id="Слой_1"
         data-name="Слой 1"
         xmlns="http://www.w3.org/2000/svg"
-        // xmlns:xlink="http://www.w3.org/1999/xlink"
         viewBox="0 0 366.7 156.24"
         style={style}>
         <defs>
@@ -524,15 +523,7 @@ export const Card_2: FC<SVGComponent & PostModel> = ({ style, order, post }) => 
               points="251.36 142.97 249.32 144.81 167.16 144.65 152.34 134.92 152.16 127.63 196.17 127.63 211.43 137.25 241.68 137.07 251.36 137.07 251.36 142.97"
               fill="#161616"
             />
-            {/* <g id="rating_num" opacity="0.75">
-              <text
-                transform="translate(212.54 134.26)"
-                font-size="9.27"
-                fill="#c6b63f"
-                font-family="ISL_FADETOBLAK, ISL_FADE TO BLAK">
-                {post.rating} / 5
-              </text>
-            </g> */}
+
             <circle cx="86.39" cy="3.41" r="0.89" fill="#4d4d4d" opacity="0.25" />
             <circle cx="89.37" cy="3.41" r="0.89" fill="#4d4d4d" opacity="0.1" />
           </g>

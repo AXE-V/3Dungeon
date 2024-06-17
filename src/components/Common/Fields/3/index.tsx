@@ -1,11 +1,12 @@
-import { FC, SyntheticEvent, memo, useEffect, useRef, useState } from 'react';
+import { FC, SyntheticEvent, memo, useEffect, useState } from 'react';
 import { useField_3 } from './Hooks/useField_3';
 import { SVGComponent } from '../../../../interfaces/SVGComponent';
 import { Styles as S } from './style';
 import { PasswordSymbol } from './components/PasswordSymbol';
 import { InputEye } from './components/InpEye';
+import { IInput } from '../../../../interfaces/IInput';
 
-export const Field_3: FC<SVGComponent> = memo(
+export const Field_3: FC<SVGComponent & IInput> = memo(
   ({ inputOptions, register, _id, _idParent, style }) => {
     const { onMouseLeave, onMouseOver, onChange, inpRef, valueInput, canSee, setCanSee } =
       useField_3(_id, _idParent);
@@ -89,12 +90,7 @@ export const Field_3: FC<SVGComponent> = memo(
             {false && (
               <S.InpItems>
                 {inputOptions?.type === 'password' ? (
-                  <InputEye
-                    _id={_id}
-                    _idParent={_idParent}
-                    canSee={canSee}
-                    seeFunc={() => setCanSee(!canSee)}
-                  />
+                  <InputEye canSee={canSee} seeFunc={() => setCanSee(!canSee)} />
                 ) : (
                   void 0
                 )}

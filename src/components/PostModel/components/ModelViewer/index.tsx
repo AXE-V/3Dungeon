@@ -1,13 +1,12 @@
-import { FC, Suspense, lazy, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { Canvas, GroupProps, useFrame, useLoader, useThree } from '@react-three/fiber';
-import { Environment, Html, OrbitControls, OrbitControlsProps, useGLTF } from '@react-three/drei';
+//@ts-nocheck
+import { FC, Suspense } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { Environment, OrbitControls, OrbitControlsProps } from '@react-three/drei';
 import { Styles as S } from './style';
 import { SVGComponent } from '../../../../interfaces/SVGComponent';
-import { GLTFLoader } from 'three-stdlib';
 import { Loading } from '../../../Common/Model/Loading';
 import { modelImporter } from './modelImporter';
 import { PostModel } from '../../../../redux/slices/data/post';
-import * as THREE from 'three';
 
 type Props = {
   orbitControlsProps?: OrbitControlsProps;

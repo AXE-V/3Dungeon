@@ -1,5 +1,4 @@
 import { styled } from '../../../stitches.config';
-import { cssAnimations } from '../../style';
 
 export const Styles = {
   Container: styled('div', {

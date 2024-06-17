@@ -137,17 +137,6 @@ export const getPostCollections = createAsyncThunk(
   },
 );
 
-export const getCollectionID = createAsyncThunk(
-  'post-model/getCollectionID',
-  async (post: Tables<'models'>) => {
-    const { data, error } = await supabase.from('collections').select('id');
-    if (error) throw error;
-    console.log(data);
-
-    return data;
-  },
-);
-
 export const getAllPosts = createAsyncThunk('post-model/getAllPosts', async () => {
   const { data: posts, error } = await supabase.from('models').select().limit(12);
   if (error) throw error;

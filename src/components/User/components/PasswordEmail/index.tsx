@@ -1,10 +1,9 @@
 import { FC } from 'react';
-import { SVGComponent } from '../../../../interfaces/SVGComponent';
+import { Basics, SVGComponent } from '../../../../interfaces/SVGComponent';
 import { Styles } from './style';
 import { usePasswordEmail } from './hooks/usePasswordEmail';
-import { useDropFocus } from '../../../../hooks/useDropFocus';
 
-export const PasswordEmail: FC<SVGComponent & { label?: string }> = ({
+export const PasswordEmail: FC<SVGComponent & Basics & { label?: string }> = ({
   children,
   _id,
   _idParent,

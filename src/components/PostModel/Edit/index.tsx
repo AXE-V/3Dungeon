@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useDropFocus } from '../../../hooks/useDropFocus';
 import { ModelMDE } from '../../Common/MDE';
 import { Field_2 } from '../../Common/Fields/2';

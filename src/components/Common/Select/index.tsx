@@ -4,7 +4,6 @@ import { Styles } from './style';
 import { ISelect } from '../../../interfaces/ISelect';
 import { SVGComponent } from '../../../interfaces/SVGComponent';
 import { useSelectElement } from './hooks/useSelectElement';
-import { useCustomDispatch } from '../../../hooks/useCustomDispatch';
 import { useLocation } from 'react-router-dom';
 
 export const Select: FC<SVGComponent & ISelect> = ({

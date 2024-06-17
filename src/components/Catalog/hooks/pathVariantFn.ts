@@ -1,14 +1,10 @@
 import { useState } from 'react';
 import { useCustomDispatch } from '../../../hooks/useCustomDispatch';
 import {
-  postFilterSelector,
   setCatalogData,
   setCatalogFilteredData,
   setCatalogPath,
 } from '../../../redux/slices/data/filter';
-import { useCatalogPathes } from './pathes';
-import { PostModel } from '../../../redux/slices/data/post';
-import { useSelector } from 'react-redux';
 
 export const pathVariantFn = () => {
   const [labelPath, setLabelPath] = useState('');

@@ -1,10 +1,9 @@
-import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { FC, SyntheticEvent, useState } from 'react';
 import { SVGComponent } from '../../../../interfaces/SVGComponent';
 import { styleController } from '../../../../utils/styleController';
 import Menu from './Menu';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../../providers/authProvider';
-import { supabase } from '../../../../supabase';
 
 export const BtnUser: FC<SVGComponent> = ({ style }) => {
   const [visible, setvisible] = useState(false);

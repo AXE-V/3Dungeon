@@ -1,7 +1,5 @@
-import { AuthError, Session, User } from '@supabase/supabase-js';
 import { FormInputs } from '../components/Auth/components/Form/options';
 import { supabase } from '../supabase';
-import { useState } from 'react';
 
 export const authRegister = async (params: FormInputs) => {
   const { email, password, ...other } = params;

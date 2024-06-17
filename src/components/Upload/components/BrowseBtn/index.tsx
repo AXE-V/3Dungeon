@@ -4,12 +4,10 @@ import { styleController } from '../../../../utils/styleController';
 import { useNavigate } from 'react-router-dom';
 import { useCustomDispatch } from '../../../../hooks/useCustomDispatch.ts';
 import { generateGLTFJSX, unzipPostData } from '../../../../redux/slices/data/post/index.ts';
-import { path } from '../../../../utils/path.ts';
 
 export const BrowseBtn: FC<SVGComponent> = ({ style, user }) => {
   const navigate = useNavigate();
   const dispatch = useCustomDispatch();
-  const { getBasename } = path;
 
   function onMouseLeave<E extends SyntheticEvent<EventTarget>>(e: E) {
     styleController({ target: e, command: 'remove' });
@@ -30,13 +28,9 @@ export const BrowseBtn: FC<SVGComponent> = ({ style, user }) => {
       const data = await dispatch(unzipPostData(file)).unwrap();
       console.log(data);
 
-      // const sceneBasename = getBasename(`${data.scene?.path}`);
-
       dispatch(
         generateGLTFJSX({ scene: data.scene?.path!, zip_name: data.zip_name!, uid: user?.id! }),
       );
-
-      // dispatch(generateGLTFJSX({ scene: sceneBasename, zip_name: data.zip_name!, uid: user?.id! }));
 
       navigate(`/user/${user?.id}/create-post`);
     } catch (error) {

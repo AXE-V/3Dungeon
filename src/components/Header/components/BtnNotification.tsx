@@ -1,16 +1,8 @@
 import { FC, SyntheticEvent } from 'react';
 import { SVGComponent } from '../../../interfaces/SVGComponent';
 import { styleController } from '../../../utils/styleController';
-import { useNavigate } from 'react-router-dom';
-// import { getUserSessionData } from '../../../api/authSign';
 
 export const BtnNotification: FC<SVGComponent> = ({ style }) => {
-  const navigate = useNavigate();
-
-  function onClick() {
-    // session ? navigate('/notifications') : navigate('/auth/login');
-  }
-
   function onMouseLeave<E extends SyntheticEvent<EventTarget>>(e: E) {
     styleController({ target: e, command: 'remove' });
   }
@@ -20,12 +12,7 @@ export const BtnNotification: FC<SVGComponent> = ({ style }) => {
   }
 
   return (
-    <svg
-      style={style}
-      onMouseOver={onMouseOver}
-      onMouseLeave={onMouseLeave}
-      onClick={onClick}
-      viewBox="0 0 42 42.5">
+    <svg style={style} onMouseOver={onMouseOver} onMouseLeave={onMouseLeave} viewBox="0 0 42 42.5">
       <polygon
         points="38.89 0 2.99 0 2.99 40.06 42 40.06 42 3.19 38.89 0"
         fill="#1c1c1c"

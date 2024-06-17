@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Logo } from '../Common/Logo';
 import { BgUpload } from './components/Bg';
 import { BrowseBtn } from './components/BrowseBtn';

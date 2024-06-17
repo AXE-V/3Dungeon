@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { supabase } from '../../../supabase';
-import { AuthError, Session } from '@supabase/supabase-js';
 import { RootState } from '../../store';
 import { Tables } from '../../../interfaces/DatabaseGeneratedTypes';
 import axios from '../../axios';
@@ -30,7 +29,6 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {},
-  extraReducers: (builder) => {},
 });
 
 export const userSelector = (state: RootState) => state.userR;

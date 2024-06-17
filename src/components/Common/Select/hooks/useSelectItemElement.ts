@@ -1,28 +1,10 @@
-import { ActionCreator } from '@reduxjs/toolkit';
 import { SyntheticEvent, useEffect, useRef } from 'react';
 import { useCustomDispatch } from '../../../../hooks/useCustomDispatch';
 import { styleController } from '../../../../utils/styleController';
 import { ISelect } from '../../../../interfaces/ISelect';
-import { useCatalogPathes } from '../../../Catalog/hooks/pathes';
-import { usePathValidate } from '../../../../hooks/usePathValidate';
-import {
-  getAllPosts,
-  getLikedPosts,
-  getPostCollections,
-  getUserPosts,
-} from '../../../../redux/slices/data/post';
-import { useAuth } from '../../../../providers/authProvider';
 import { useSelector } from 'react-redux';
 import { filterPostBy, postFilterSelector } from '../../../../redux/slices/data/filter';
 
-// type Props = {
-//   isFilter?: boolean;
-//   _id?: any;
-//   selectedItem?: any;
-//   setSelectedItem?: (val: any) => void;
-//   setIsOpen?: (val: any) => void;
-//   action?: ActionCreator<any>;
-// };
 export const useSelectItemElement = ({
   _id,
   selectedItem,
@@ -31,13 +13,9 @@ export const useSelectItemElement = ({
   action,
   isFilter,
   filterBy,
-  pathname,
 }: ISelect) => {
   const itemRef = useRef(null);
   const dispatch = useCustomDispatch();
-  const pathes = useCatalogPathes();
-  const validatePathes = usePathValidate();
-  const { user } = useAuth();
   const postFilterSlice = useSelector(postFilterSelector);
 
   useEffect(() => {

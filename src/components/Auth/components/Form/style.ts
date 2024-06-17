@@ -1,6 +1,5 @@
-import { keyframes, styled } from '@stitches/react';
-import { cssAnimations, cssPathes } from '../../../../style';
-import { css } from '../../../../../stitches.config';
+import { styled } from '@stitches/react';
+import { cssPathes } from '../../../../style';
 
 export const Styles = {
   Check: styled('div', {

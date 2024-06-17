@@ -1,5 +1,4 @@
 import { css, styled } from '../../../stitches.config';
-import { cssPathes } from '../../style';
 
 export const Styles = {
   CardContainer: styled('section', {

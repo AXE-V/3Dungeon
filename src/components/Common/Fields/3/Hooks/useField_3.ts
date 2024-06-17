@@ -1,17 +1,17 @@
 import { SyntheticEvent, useRef, useState } from 'react';
-import { AppDispath } from '../../../../../redux/store';
-import { inputState, setFocus } from '../../../../../redux/slices/visual/input';
-import { useDispatch, useSelector } from 'react-redux';
+import { inputSelector } from '../../../../../redux/slices/visual/input';
+import { useSelector } from 'react-redux';
 import { useChangeFocus } from '../../../../../hooks/useChangeFocus';
 import { styleController } from '../../../../../utils/styleController';
-import { dispatch } from '../../../../../hooks/useCustomDispatch';
+import { useCustomDispatch } from '../../../../../hooks/useCustomDispatch';
 
 export const useField_3 = (_id: any, _idParent: any) => {
   const inpRef = useRef(null);
+  const dispatch = useCustomDispatch();
   const [valueInput, setValueInput] = useState('');
   const [canSee, setCanSee] = useState(false);
 
-  const inputR = useSelector(inputState);
+  const inputR = useSelector(inputSelector);
 
   useChangeFocus({ inpRef: inpRef, inputR: inputR });
 

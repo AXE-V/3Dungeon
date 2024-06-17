@@ -1,15 +1,13 @@
-import { css, styled } from "../../../../../stitches.config";
-import { cssAnimations, cssPathes } from "../../../../style";
-
+import { styled } from '../../../../../stitches.config';
+import { cssPathes } from '../../../../style';
 
 export const Styles = {
-
- Inp: styled('input', {
+  Inp: styled('input', {
     minHeight: '100%',
     position: 'absolute',
-    opacity: .5,
+    opacity: 0.5,
     fontFamily: '$blak',
-    fontSize: '1vw', 
+    fontSize: '1vw',
     marginLeft: '.5vw',
     zIndex: 1,
   }),
@@ -23,18 +21,18 @@ export const Styles = {
     overflow: 'auto',
     '&::-webkit-scrollbar': {
       width: 0,
-      height: 0
+      height: 0,
     },
   }),
 
-  InpBorderContentLabel: styled('label', {   
+  InpBorderContentLabel: styled('label', {
     display: 'flex',
     width: `70%`,
     position: 'relative',
     padding: '0vw 6.4vw 0vw .4vw',
     background: '$dark4',
-    '&, &:after': {   
-      clipPath: cssPathes.inpBorder
+    '&, &:after': {
+      clipPath: cssPathes.inpBorder,
     },
     '&:after': {
       content: '',
@@ -43,8 +41,8 @@ export const Styles = {
       bottom: '.05vw',
       right: '.07vw',
       left: '-0.05vw',
-      background: '$dark3'
-    }
+      background: '$dark3',
+    },
   }),
 
   InpHeaderLabel: styled('label', {
@@ -53,7 +51,7 @@ export const Styles = {
     alignItems: 'center',
     background: '$dark4',
     width: `40%`,
-    opacity: .75,
+    opacity: 0.75,
     padding: '.6vw .4vw',
     userSelect: 'none',
     textAlign: 'center',
@@ -62,10 +60,10 @@ export const Styles = {
   }),
 
   InpContainer: styled('div', {
-    width: '100%', 
-    position: 'relative', 
-    left: '50%', 
-    transform: 'translate(-50%, 0)'
+    width: '100%',
+    position: 'relative',
+    left: '50%',
+    transform: 'translate(-50%, 0)',
   }),
 
   InpCount: styled('div', {
@@ -82,14 +80,13 @@ export const Styles = {
   }),
 
   InpItems: styled('div', {
-    display: 'flex', 
-    columnGap: '.2vw', 
-    position: 'absolute', 
-    right: '0%', 
-    top: '50%', 
-    transform: 'translate(-10%, -50%)', 
+    display: 'flex',
+    columnGap: '.2vw',
+    position: 'absolute',
+    right: '0%',
+    top: '50%',
+    transform: 'translate(-10%, -50%)',
     zIndex: 1,
-    pointerEvents: 'none'
+    pointerEvents: 'none',
   }),
-  
-}
+};

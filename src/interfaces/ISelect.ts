@@ -1,4 +1,3 @@
-import { ActionCreator } from '@reduxjs/toolkit';
 import { Basics } from './SVGComponent';
 
 export type ISelect = Select & Basics;
@@ -16,7 +15,6 @@ export interface Select {
     | 'user_id'
     | 'view_count'
     | 'zip_name';
-  // filterBy?: 'category' | 'format' | 'license' | 'rating' | 'date' | 'view_count';
   isFilter?: boolean;
   selectedItem?: string;
   setSelectedItem?: (val: any) => void;

@@ -1,9 +1,8 @@
-import { FC, MutableRefObject, SyntheticEvent, useEffect, useRef, useState } from 'react';
+import { FC } from 'react';
 import { Basics, SVGComponent } from '../../../interfaces/SVGComponent';
 import { Styles as S } from './style';
 import { Field_2 } from '../Fields/2';
 import { StyleElements as SE } from '../styleElements';
-import { CSSProperties } from '@stitches/react';
 import { useTags } from './hooks/useTags';
 import { setPostTags } from '../../../redux/slices/data/post';
 

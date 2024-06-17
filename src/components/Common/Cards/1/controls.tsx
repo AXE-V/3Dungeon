@@ -4,19 +4,17 @@ import {
   PostModel,
   deletePost,
   downloadModel,
-  getCollectionID,
   getPostLike,
   setAllPostData,
   setPostLike,
 } from '../../../../redux/slices/data/post';
-import { Tables } from '../../../../interfaces/DatabaseGeneratedTypes';
 import { useAuth } from '../../../../providers/authProvider';
 import { addCartItem } from '../../../../redux/slices/data/cart';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useCatalogPathes } from '../../../Catalog/hooks/pathes';
 import { getUserDataByID } from '../../../../redux/slices/data/user';
 
-export const CardControls = ({ post, model }: PostModel) => {
+export const CardControls = ({ post }: PostModel) => {
   const dispatch = useCustomDispatch();
   const [like, setLike] = useState(false);
   const { user } = useAuth();

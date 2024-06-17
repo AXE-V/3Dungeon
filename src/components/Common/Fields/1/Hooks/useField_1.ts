@@ -1,7 +1,6 @@
 import { SyntheticEvent, useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { inputSelector, setFocus } from '../../../../../redux/slices/visual/input';
-import { AppDispath } from '../../../../../redux/store';
 import { styleController } from '../../../../../utils/styleController';
 import { useDropFocus } from '../../../../../hooks/useDropFocus';
 import { useCustomDispatch } from '../../../../../hooks/useCustomDispatch';

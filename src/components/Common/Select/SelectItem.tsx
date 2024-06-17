@@ -1,7 +1,5 @@
-import { FC, SyntheticEvent, useEffect, useRef } from 'react';
+import { FC } from 'react';
 import { SVGComponent } from '../../../interfaces/SVGComponent';
-import { styleController } from '../../../utils/styleController';
-import { useCustomDispatch } from '../../../hooks/useCustomDispatch';
 import { ISelect } from '../../../interfaces/ISelect';
 import { useSelectItemElement } from './hooks/useSelectItemElement';
 
@@ -14,7 +12,6 @@ export const SelectItem: FC<SVGComponent & ISelect> = ({
   setIsOpen,
   action,
   isFilter,
-  // sliceValue,
   filterBy,
   pathname,
 }) => {
@@ -25,7 +22,6 @@ export const SelectItem: FC<SVGComponent & ISelect> = ({
     setIsOpen,
     action,
     isFilter,
-    // sliceValue,
     filterBy,
     pathname,
   });

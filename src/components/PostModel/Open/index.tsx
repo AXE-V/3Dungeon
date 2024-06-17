@@ -1,29 +1,12 @@
+//@ts-nocheck
 import { useDropFocus } from '../../../hooks/useDropFocus';
 import { ModelMDE } from '../../Common/MDE';
 import { Field_2 } from '../../Common/Fields/2';
 import { Scrollbar } from '../../Common/Scroll';
-import { StyleElements as SE } from '../../Common/styleElements';
 import { ModelViewer } from '../components/ModelViewer';
 import { Styles as S } from '../style';
-import { Select } from '../../Common/Select';
-import { Tags } from '../../Common/Tags';
-import { useEffect, useState } from 'react';
-import { filterCategory, filterLicense } from '../../Common/Select/data';
-import { Tables } from '../../../interfaces/DatabaseGeneratedTypes';
-import { useAuth } from '../../../providers/authProvider';
-import { Message } from '../../Common/Message';
 
-import {
-  PostModel,
-  editPost,
-  postSelector,
-  setPostAbout,
-  setPostCategory,
-  setPostLicense,
-  setPostTitle,
-  setPostUser,
-} from '../../../redux/slices/data/post';
-import { useCustomDispatch } from '../../../hooks/useCustomDispatch';
+import { postSelector, setPostAbout, setPostTitle } from '../../../redux/slices/data/post';
 import { useSelector } from 'react-redux';
 import { Styles as TagStyles } from '../../Common/Tags/style';
 

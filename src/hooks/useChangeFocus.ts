@@ -1,5 +1,4 @@
 import { MutableRefObject, useEffect } from 'react';
-import { StyleController } from '../interfaces/StyleController';
 import { IInput } from '../interfaces/IInput';
 import { styleController } from '../utils/styleController';
 

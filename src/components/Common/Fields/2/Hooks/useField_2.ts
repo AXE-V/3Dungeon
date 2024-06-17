@@ -1,6 +1,5 @@
 import { SyntheticEvent, useRef, useState } from 'react';
-import { AppDispath } from '../../../../../redux/store';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useChangeFocus } from '../../../../../hooks/useChangeFocus';
 import { styleController } from '../../../../../utils/styleController';
 import { useCustomDispatch } from '../../../../../hooks/useCustomDispatch';
@@ -40,9 +39,5 @@ export const useField_2 = (_id: any, _idParent: any) => {
         style: { background: '#c6b63f', color: '#000' },
       });
     },
-
-    // onChange<E extends SyntheticEvent<EventTarget>>(e: E) {
-    //   setValueInput((e.target as HTMLInputElement).value)
-    // }
   };
 };

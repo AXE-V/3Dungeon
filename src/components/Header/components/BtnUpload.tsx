@@ -1,8 +1,7 @@
-import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { FC, SyntheticEvent } from 'react';
 import { SVGComponent } from '../../../interfaces/SVGComponent';
 import { styleController } from '../../../utils/styleController';
 import { useNavigate } from 'react-router-dom';
-import { Session } from '@supabase/supabase-js';
 
 export const BtnUpload: FC<SVGComponent> = ({ style, session }) => {
   const navigate = useNavigate();

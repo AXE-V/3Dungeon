@@ -2,7 +2,6 @@ import { FC } from 'react';
 import { SVGComponent } from '../../../../interfaces/SVGComponent';
 import { styles } from './style';
 import { useField_1 } from './Hooks/useField_1';
-import { useDropFocus } from '../../../../hooks/useDropFocus';
 import { IInput } from '../../../../interfaces/IInput';
 export const Field_1: FC<SVGComponent & IInput> = ({
   style,

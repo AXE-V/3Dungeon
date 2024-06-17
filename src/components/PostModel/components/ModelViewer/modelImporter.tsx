@@ -1,8 +1,7 @@
-import { GroupProps, useFrame, useThree } from '@react-three/fiber';
-import { ReactElement, RefObject, useEffect, useRef, useState } from 'react';
+import { GroupProps } from '@react-three/fiber';
+import { useEffect, useState } from 'react';
 import { path } from '../../../../utils/path';
 import { PostModel } from '../../../../redux/slices/data/post';
-import * as THREE from 'three';
 
 type ModelImporter = Pick<PostModel['post'], 'zip_name' | 'user_id'>;
 export const modelImporter = (post: ModelImporter) => {

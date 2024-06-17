@@ -1,7 +1,6 @@
 import { SyntheticEvent, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AppDispath } from '../../../../../redux/store';
 import { setActiveSign, signSelector } from '../../../../../redux/slices/visual/sign';
 import { styleController } from '../../../../../utils/styleController';
 import { useCustomDispatch } from '../../../../../hooks/useCustomDispatch';

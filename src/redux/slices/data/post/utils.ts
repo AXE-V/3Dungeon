@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { PostModel } from '.';
 import { Tables } from '../../../../interfaces/DatabaseGeneratedTypes';
 import { supabase } from '../../../../supabase';

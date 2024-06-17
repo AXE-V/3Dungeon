@@ -3,7 +3,7 @@ import { DeleteCollection, PostModel, deletePostCollection } from '../../redux/s
 import { Link, useLocation } from 'react-router-dom';
 import { useCatalogPathes } from './hooks/pathes';
 import { useAuth } from '../../providers/authProvider';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { postFilterSelector } from '../../redux/slices/data/filter';
 import { Styles as S } from './style.js';
 import { SyntheticEvent, useEffect, useState } from 'react';

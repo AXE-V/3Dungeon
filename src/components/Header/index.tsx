@@ -8,12 +8,11 @@ import { Logo } from '../Common/Logo';
 import { LogoText } from './components/LogoText';
 import { Search } from './components/Search';
 import FilterPanel from './components/FilterPanel/index';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { cssAnimations } from '../../style';
 import { Link } from 'react-router-dom';
 import { BtnCart } from './components/CartPanel/components/BtnCart';
 import { CartPanel } from './components/CartPanel';
-import { Session } from '@supabase/supabase-js';
 import { useAuth } from '../../providers/authProvider';
 
 const Header = () => {

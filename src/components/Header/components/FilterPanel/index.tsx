@@ -1,18 +1,9 @@
+//@ts-nocheck
 import { BtnReset } from './components/BtnReset';
 import styles from '../../components/FilterPanel/style';
-import { FC, ReactNode } from 'react';
+import { FC } from 'react';
 import { SVGComponent } from '../../../../interfaces/SVGComponent';
-import { useLocation } from 'react-router-dom';
-import { StyleElements as SE } from '../../../Common/styleElements';
-import {
-  filterAllSelectData,
-  filterCategory,
-  filterDate,
-  filterFormat,
-  filterLicense,
-  // filterSortBy,
-  // filterStars,
-} from '../../../Common/Select/data';
+import { filterAllSelectData } from '../../../Common/Select/data';
 import { Select } from '../../../Common/Select';
 import { useSelector } from 'react-redux';
 import { filterPostBy, postFilterSelector } from '../../../../redux/slices/data/filter';

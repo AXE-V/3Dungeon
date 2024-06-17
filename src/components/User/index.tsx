@@ -6,27 +6,20 @@ import { LocationGroup } from './components/Location';
 import { ContactsGroup } from './components/Contacts';
 import { AvatarGroup } from './components/Avatar';
 import { SkillsGroup } from './components/Skills';
-import { Cross } from '../Common/Cross';
 import { useForm } from 'react-hook-form';
 import { Field_2 } from '../Common/Fields/2';
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { SVGComponent } from '../../interfaces/SVGComponent';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Session } from '@supabase/supabase-js';
+import { useLocation } from 'react-router-dom';
 import { InputTypes } from '../../interfaces/IInput';
 import { useAuth } from '../../providers/authProvider';
 import { NotFound } from '../NotFound';
 
 export const User: FC<SVGComponent> = () => {
   const { pathname } = useLocation();
-  const navigate = useNavigate();
   const { user } = useAuth();
 
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = useForm();
+  const { handleSubmit, register } = useForm();
 
   interface Fields {
     label: string;
