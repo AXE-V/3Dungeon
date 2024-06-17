@@ -5,13 +5,16 @@ import 'easymde/dist/easymde.min.css';
 import { CSSProperties } from '@stitches/react';
 import { Basics, SVGComponent } from '../../../interfaces/SVGComponent';
 import { useCustomDispatch } from '../../../hooks/useCustomDispatch';
+import { PostModel } from '../../../redux/slices/data/post';
 
-export const ModelMDE: FC<SVGComponent & Basics> = ({ sliceValue, action }) => {
+export const ModelMDE: FC<SVGComponent & Basics & PostModel> = ({ sliceValue, action, post }) => {
   const dispatch = useCustomDispatch();
   const [mde_parts, setMde_parts] = useState<(Element | null)[]>([]);
   const mdeRef = useRef(null);
 
-  const autoSaveValue = localStorage.getItem('smde_model-description') ?? '';
+  console.log(post);
+
+  const autoSaveValue = post.about ?? localStorage.getItem('smde_model-description') ?? '';
   const delay = 1000;
   const mde_css: CSSProperties = { transition: '.2s' };
 

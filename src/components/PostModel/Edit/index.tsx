@@ -110,7 +110,7 @@ export const EditPostModel = () => {
               inputOptions={{ type: 'text', label: 'header' }}
               style={{ position: 'relative', left: '50%' }}
             />
-            <ModelMDE action={setPostAbout} />
+            <ModelMDE action={setPostAbout} post={postSlice} />
           </S.Column1>
           <div style={{ padding: '5vw 2vw 2vw 2vw' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '3vw' }}>

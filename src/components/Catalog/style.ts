@@ -43,4 +43,11 @@ export const Styles = {
       background: '$dark5',
     },
   }),
+
+  delete: styled('div', {
+    transition: '.15s',
+    '&:hover': {
+      color: '#c6b63f',
+    },
+  }),
 };

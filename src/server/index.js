@@ -219,6 +219,26 @@ app.post('/check-path-generated', async (req, res) => {
   }
 });
 
+app.get('/clear-cache', (_, res) => {
+  try {
+    const clearPath = `./public/models/data`;
+    if (fs.existsSync(clearPath)) {
+      fs.rmSync(clearPath, { recursive: true, force: true });
+      console.log(`удалена директория ${clearPath}`);
+    }
+    res.status(200).json({
+      success: true,
+      message: 'directory was deleted',
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: 'directory was not deleted',
+    });
+  }
+});
+
 const uploadMS = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {

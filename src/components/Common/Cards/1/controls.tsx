@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useCustomDispatch } from '../../../../hooks/useCustomDispatch';
 import {
   PostModel,
+  deletePost,
   downloadModel,
   getCollectionID,
   getPostLike,
@@ -46,6 +47,9 @@ export const CardControls = ({ post, model }: PostModel) => {
     console.log(data);
   };
 
+  const onDelete = async () => {
+    dispatch(deletePost(post));
+  };
   const onOpen = () => {
     const getData = async () => {
       const userData = await dispatch(getUserDataByID(user?.id!)).unwrap();
@@ -93,6 +97,9 @@ export const CardControls = ({ post, model }: PostModel) => {
       </button>
       <button onClick={onDownload} style={{ opacity: 1, background: '#181818', cursor: 'pointer' }}>
         <p style={{ opacity: 0.75 }}>download</p>
+      </button>
+      <button onClick={onDelete} style={{ opacity: 1, background: '#181818', cursor: 'pointer' }}>
+        <p style={{ opacity: 0.75 }}>delete</p>
       </button>
     </div>
   );

@@ -64,12 +64,20 @@ const postSliceFilter = createSlice({
     filterPostBy: (state, { payload }) => {
       state.filteredCatalogData = payload;
     },
+    clearCatalogData: () => {
+      return initialState;
+    },
   },
   extraReducers: (builder) => {},
 });
 
 export const postFilterSelector = (state: RootState) => state.postFilterR;
 
-export const { setCatalogData, setCatalogFilteredData, setCatalogPath, filterPostBy } =
-  postSliceFilter.actions;
+export const {
+  setCatalogData,
+  setCatalogFilteredData,
+  setCatalogPath,
+  filterPostBy,
+  clearCatalogData,
+} = postSliceFilter.actions;
 export const postFilterR = postSliceFilter.reducer;

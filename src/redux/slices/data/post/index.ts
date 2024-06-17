@@ -174,6 +174,35 @@ export const downloadModel = createAsyncThunk(
   },
 );
 
+export const deletePost = createAsyncThunk(
+  'post-model/deletePost',
+  async (post: Tables<'models'>) => {
+    const { data, error } = await supabase.from('models').delete().eq('id', post.id).select();
+    if (error) throw error;
+    console.log(data);
+    return data;
+  },
+);
+
+export type DeleteCollection = {
+  id: string;
+  uid: string;
+};
+export const deletePostCollection = createAsyncThunk(
+  'post-model/deletePost',
+  async ({ id, uid }: DeleteCollection) => {
+    const { data, error } = await supabase
+      .from('collections')
+      .delete()
+      .eq('id', id)
+      .eq('creator_id', uid)
+      .select();
+    if (error) throw error;
+    console.log(data);
+    return data;
+  },
+);
+
 // используется в каждой карте поста, делает запрос и скачивает файлы модели. Принимает данные поста и файлы модели
 type LoadPostFiles = { post: Tables<'models'>; model: ModelData[] };
 export const loadPostFiles = createAsyncThunk(

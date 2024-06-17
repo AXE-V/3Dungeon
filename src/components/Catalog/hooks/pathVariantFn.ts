@@ -28,7 +28,7 @@ export const pathVariantFn = () => {
         dispatch(setCatalogData(data));
         dispatch(setCatalogFilteredData(data));
         dispatch(setCatalogPath(path));
-      }, 1500);
+      }, 1000);
     } catch (error) {
       console.error(error);
     }

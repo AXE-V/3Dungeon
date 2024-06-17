@@ -25,6 +25,7 @@ import {
 } from '../../../redux/slices/data/post';
 import { useCustomDispatch } from '../../../hooks/useCustomDispatch';
 import { useSelector } from 'react-redux';
+import { Styles as TagStyles } from '../../Common/Tags/style';
 
 export const OpenPostModel = () => {
   useDropFocus();
@@ -46,8 +47,36 @@ export const OpenPostModel = () => {
               inputOptions={{ type: 'text', label: 'header' }}
               style={{ position: 'relative', left: '50%' }}
             />
-            <ModelMDE action={setPostAbout} />
+            <ModelMDE action={setPostAbout} post={postSlice} />
           </S.Column1>
+          <div
+            style={{
+              top: '4vw',
+              position: 'relative',
+              opacity: 0.75,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1.5vw',
+            }}>
+            <div style={{ display: 'flex', columnGap: '1vw' }}>
+              category: <p style={{ color: '#c6b63f' }}>{postSlice.category}</p>
+            </div>
+            <div style={{ display: 'flex', columnGap: '1vw' }}>
+              format: <p style={{ color: '#c6b63f' }}>{postSlice.format}</p>
+            </div>
+            <div style={{ display: 'flex', columnGap: '1vw' }}>
+              license: <p style={{ color: '#c6b63f' }}>{postSlice.license}</p>
+            </div>
+
+            <div style={{ display: 'flex', gap: '.8vw' }}>
+              <p>tags:</p>
+              <ul style={{ display: 'flex', columnGap: '.5vw', rowGap: '.5vw', flexWrap: 'wrap' }}>
+                {postSlice.tags.map((t) => (
+                  <TagStyles.Tag>{t}</TagStyles.Tag>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
       </Scrollbar>
     </div>
