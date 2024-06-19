@@ -11,13 +11,13 @@ import {
 import { useAuth } from '../../../../providers/authProvider';
 import { addCartItem } from '../../../../redux/slices/data/cart';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useCatalogPathes } from '../../../Catalog/hooks/pathes';
+import { useCatalogPathes } from '../../../Catalog/hooks/useCatalogPathes';
 import { getUserDataByID } from '../../../../redux/slices/data/user';
 
 export const CardControls = ({ post }: PostModel) => {
   const dispatch = useCustomDispatch();
   const [like, setLike] = useState(false);
-  const { user } = useAuth();
+  const { user, session } = useAuth();
   const navigate = useNavigate();
   const { pathes, collectionName } = useCatalogPathes();
   const { pathname } = useLocation();
@@ -32,8 +32,10 @@ export const CardControls = ({ post }: PostModel) => {
   }, []);
 
   const onLike = () => {
-    setLike(!like);
-    dispatch(setPostLike({ user_id: user?.id!, model_id: post.id!, checked: !like }));
+    if (session) {
+      setLike(!like);
+      dispatch(setPostLike({ user_id: user?.id!, model_id: post.id!, checked: !like }));
+    }
   };
 
   const onAddCartItem = async () => {
@@ -46,11 +48,13 @@ export const CardControls = ({ post }: PostModel) => {
   };
 
   const onDelete = async () => {
-    dispatch(deletePost(post));
+    if (post.user_id === user?.id!) {
+      dispatch(deletePost(post));
+    }
   };
   const onOpen = () => {
     const getData = async () => {
-      const userData = await dispatch(getUserDataByID(user?.id!)).unwrap();
+      const userData = await dispatch(getUserDataByID(post.user_id)).unwrap();
       dispatch(setAllPostData(post));
       switch (pathname) {
         case pathes.root:

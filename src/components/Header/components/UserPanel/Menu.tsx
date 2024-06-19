@@ -18,7 +18,6 @@ export const Menu: FC<SVGComponent> = ({ style }) => {
             <MenuItem label={'models'} to={`/user/${login}/3d-models`} />
             <MenuItem label={'likes'} to={`/user/${login}/likes`} />
             <MenuItem label={'account'} to={`/user/${login}`} />
-            <MenuItem label={'clear cache'} />
             <MenuItem label={'login'} />
           </S.MenuSection>
         </S.Menu>

@@ -1,6 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
 import { PostModel } from './post';
+import axios from '../../axios';
 
 type InitialState = {
   catalogData: PostModel[];
@@ -12,6 +13,11 @@ const initialState: InitialState = {
   filteredCatalogData: [],
   catalogPath: '',
 };
+
+export const clearCache = createAsyncThunk('user/clearCache', async () => {
+  const { data } = await axios.get('/clear-cache');
+  return data;
+});
 
 const postSliceFilter = createSlice({
   name: 'filter',
@@ -29,19 +35,16 @@ const postSliceFilter = createSlice({
     filterPostBy: (state, { payload }) => {
       state.filteredCatalogData = payload;
     },
-    clearCatalogData: () => {
+  },
+  extraReducers(builder) {
+    builder.addCase(clearCache.fulfilled, () => {
       return initialState;
-    },
+    });
   },
 });
 
 export const postFilterSelector = (state: RootState) => state.postFilterR;
 
-export const {
-  setCatalogData,
-  setCatalogFilteredData,
-  setCatalogPath,
-  filterPostBy,
-  clearCatalogData,
-} = postSliceFilter.actions;
+export const { setCatalogData, setCatalogFilteredData, setCatalogPath, filterPostBy } =
+  postSliceFilter.actions;
 export const postFilterR = postSliceFilter.reducer;

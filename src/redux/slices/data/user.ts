@@ -2,8 +2,11 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { supabase } from '../../../supabase';
 import { RootState } from '../../store';
 import { Tables } from '../../../interfaces/DatabaseGeneratedTypes';
-import axios from '../../axios';
-const initialState: Tables<'users'> = {
+
+type Additional = {
+  cacheCleared: boolean;
+};
+const initialState: Tables<'users'> & Additional = {
   about: '',
   created_at: '',
   id: '',
@@ -12,12 +15,8 @@ const initialState: Tables<'users'> = {
   location: '',
   login: '',
   skills: [],
+  cacheCleared: false,
 };
-
-export const clearCache = createAsyncThunk('user/clearCache', async () => {
-  const { data } = await axios.get('/clear-cache');
-  return data;
-});
 
 export const getUserDataByID = createAsyncThunk('user/getUserDataByID', async (uid: string) => {
   const { data, error } = await supabase.from('users').select().eq('id', uid).limit(1).single();
@@ -32,4 +31,5 @@ const userSlice = createSlice({
 });
 
 export const userSelector = (state: RootState) => state.userR;
+export const userSelectorCache = (state: RootState) => state.userR.cacheCleared;
 export const userR = userSlice.reducer;

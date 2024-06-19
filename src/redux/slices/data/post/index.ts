@@ -8,12 +8,11 @@ import { path } from '../../../../utils/path';
 import { ModelData } from '../../../../interfaces/ModelData';
 import { postsIterator } from './utils';
 
-type Response = {
-  success?: true;
-  message?: string;
+type Additional = {
+  downloads: boolean;
 };
 
-const initialState: Tables<'models'> = {
+const initialState: Tables<'models'> & Additional = {
   about: '',
   category: '',
   format: '',
@@ -22,6 +21,12 @@ const initialState: Tables<'models'> = {
   title: '',
   user_id: '',
   zip_name: '',
+  downloads: false,
+};
+
+type Response = {
+  success?: true;
+  message?: string;
 };
 
 type Editpost = {
@@ -163,6 +168,10 @@ export const downloadModel = createAsyncThunk(
   },
 );
 
+export const getLoadedModels = createAsyncThunk('post-model/getLoadedModels', async () => {
+  await axios.post('/get-loaded-models');
+});
+
 export const deletePost = createAsyncThunk(
   'post-model/deletePost',
   async (post: Tables<'models'>) => {
@@ -198,37 +207,8 @@ export const loadPostFiles = createAsyncThunk(
   'post-model/loadPostFiles',
   async ({ post, model }: LoadPostFiles) => {
     const { getName } = path;
-    const { data } = await axios.post('/check-path-generated', { post });
-
-    if (!data.success) {
-      console.log('данные уже загружены');
-      return;
-    }
-    console.log('данных не было. Начинается загрузка');
-
-    const fd = new FormData();
-    // качает все бинарники модели
-    const download = async () => {
-      model.map(async (obj) => {
-        // бинарник файла
-        const { data, error } = await supabase.storage
-          .from('models')
-          .download(`${post.user_id}/${getName(post.zip_name)}/${obj.name}`);
-        if (error) throw error;
-
-        if (data.type !== 'application/zip') {
-          fd.append('file', data, obj.name);
-        }
-      });
-    };
-    await download();
-
-    fd.append('zip_name', post.zip_name);
-    fd.append('user_id', post.user_id);
-    setTimeout(async () => {
-      await axios.post('/load-gltf-jsx', fd);
-      console.log('данные загружены');
-    }, 1000);
+    const { data } = await axios.post('/check-path-generated', { post, model });
+    return data;
   },
 );
 
@@ -248,7 +228,6 @@ const postSlice = createSlice({
     setPostFormat(state, { payload }) {
       state.format = payload;
     },
-
     setPostLicense(state, { payload }) {
       state.license = payload;
     },
@@ -261,15 +240,8 @@ const postSlice = createSlice({
     setPostUser(state, { payload }) {
       state.user_id = payload;
     },
-    clearPostData(state) {
-      state.about = '';
-      state.category = '';
-      state.format = '';
-      state.license = '';
-      state.tags = [];
-      state.title = '';
-      state.user_id = '';
-      state.zip_name = '';
+    clearPostData() {
+      return initialState;
     },
     setAllPostData: (state, { payload }) => {
       return { ...state, ...payload };
@@ -280,12 +252,19 @@ const postSlice = createSlice({
       state.zip_name = payload.zip_name!;
       state.format = payload.scene?.format!;
     });
+    builder.addCase(downloadModel.pending, (state) => {
+      return { ...state, downloads: true };
+    });
+    builder.addCase(downloadModel.fulfilled, (state) => {
+      return { state, downloads: false };
+    });
   },
 });
 
 export const postSelector = (state: RootState) => state.postR;
 export const postSelectorFormat = (state: RootState) => state.postR.format;
 export const postSelectorZipName = (state: RootState) => state.postR.zip_name;
+export const postSelectorDownloads = (state: RootState) => state.postR.downloads;
 export const {
   setPostTitle,
   setPostAbout,

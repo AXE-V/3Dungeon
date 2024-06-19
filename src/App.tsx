@@ -76,14 +76,7 @@ function App() {
                 }
               />
               <Route path="/user/:login/3d-models" element={<Catalog />} />
-              <Route
-                path="/user/:login/3d-models/:post_id"
-                element={
-                  <ProtectedRoute>
-                    <OpenPostModel />
-                  </ProtectedRoute>
-                }
-              />
+              <Route path="/user/:login/3d-models/:post_id" element={<OpenPostModel />} />
               <Route
                 path="/user/:login/create-post"
                 element={
@@ -92,14 +85,6 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              {/* <Route
-                path="/user/:login/edit-post/:post_id"
-                element={
-                  <ProtectedRoute>
-                    <EditPostModel />
-                  </ProtectedRoute>
-                }
-              /> */}
             </Route>
           </Route>
           <Route path="/" element={<ContentLayout />}>

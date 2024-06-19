@@ -3,59 +3,29 @@ import { Styles as S } from './style.js';
 import { BtnNextBack } from '../Common/BtnNextBack';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
-import { useAuth } from '../../providers/authProvider.js';
-import {
-  getAllPosts,
-  getLikedPosts,
-  getPostCollections,
-  getUserPosts,
-} from '../../redux/slices/data/post/index.js';
 import { CardRender } from './CardRender.js';
-import { useCatalogPathes } from './hooks/pathes.js';
+import { useCatalogPathes } from './hooks/useCatalogPathes.js';
 import { postFilterSelector } from '../../redux/slices/data/filter.js';
-import { pathVariantFn } from './hooks/pathVariantFn.js';
+import { Message } from '../Common/Message/index.js';
+import { postSelectorDownloads } from '../../redux/slices/data/post/index.js';
 
 const Catalog = () => {
-  const { user } = useAuth();
-  const { pathname } = useLocation();
   const postFilterSlice = useSelector(postFilterSelector);
-  const { pathes, collectionName } = useCatalogPathes();
-  const { pathFunction, labelPath } = pathVariantFn();
+  const { collectionName, labelPath, swithPath } = useCatalogPathes();
+  const postDownloads = useSelector(postSelectorDownloads);
 
   useEffect(() => {
-    switch (pathname) {
-      case pathes.root:
-        pathFunction({ cb: () => getAllPosts(), path: pathes.root, pathLabel: 'main page' });
-        break;
-      case pathes.collections:
-        pathFunction({
-          cb: () => getPostCollections(user?.id!),
-          path: pathes.collections,
-          pathLabel: 'collections',
-        });
-        break;
-      case pathes.models:
-        pathFunction({
-          cb: () => getUserPosts(user?.id!),
-          path: pathes.models,
-          pathLabel: 'models',
-        });
-        break;
-      case pathes.likes:
-        pathFunction({
-          cb: () => getLikedPosts(user?.id!),
-          path: pathes.likes,
-          pathLabel: 'likes',
-        });
-        break;
-    }
-    console.log(postFilterSlice);
+    swithPath();
   }, []);
 
   return (
     <>
       <div>
+        {postDownloads && (
+          <Message style={{ position: 'absolute', left: '85vw', top: '6vw' }}>
+            Downloading the model
+          </Message>
+        )}
         <h1 style={{ position: 'absolute', left: '5.2vw', top: '6.5vw', opacity: 0.75 }}>
           {labelPath} {collectionName}
         </h1>

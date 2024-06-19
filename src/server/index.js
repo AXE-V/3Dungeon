@@ -4,11 +4,8 @@ import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
 import AdmZip from 'adm-zip';
-import { createClient } from '@supabase/supabase-js';
 import { __dname } from './global.js';
 import { spawn } from 'child_process';
-import { randomUUID } from 'crypto';
-// import { importFile } from './importFile.js';
 import { supabase } from './supabase.js';
 import { uploadFile } from './utils/uploadFile.js';
 import os from 'os';
@@ -204,17 +201,51 @@ app.post('/generate-gltf-jsx', async (req, res) => {
 });
 
 app.post('/check-path-generated', async (req, res) => {
-  const { post } = req.body;
-  const loadPath = `./public/models/data/${post.user_id}/${path.parse(post.zip_name).name}`;
-  if (fs.existsSync(loadPath)) {
-    res.status(500).json({
-      success: false,
-      message: 'path exists',
+  try {
+    const { post, model } = req.body;
+
+    model.forEach((m) => {
+      if (m.metadata.mimetype !== 'application/zip') {
+        const fileDir = path.join(
+          __dname,
+          '../..',
+          `public/models/data/${post.user_id}/${path.parse(post.zip_name).name}`,
+        );
+        const filePath = path.join(
+          __dname,
+          '../..',
+          `public/models/data/${post.user_id}/${path.parse(post.zip_name).name}/${m.name}`,
+        );
+        if (!fs.existsSync(filePath)) {
+          const createFile = async () => {
+            const supabaseFilePath = `${post.user_id}/${path.parse(post.zip_name).name}/${m.name}`;
+            const { data: blob, error } = await supabase.storage
+              .from('models')
+              .download(supabaseFilePath);
+
+            if (error) throw error;
+            const buf = Buffer.from(await blob.arrayBuffer());
+
+            fs.mkdirSync(fileDir, { recursive: true });
+
+            fs.writeFile(path.join(filePath), buf, (err) => {
+              if (err) throw err;
+              console.log(`отсутствующий файл загружен ${m.name}`);
+            });
+          };
+          createFile();
+        }
+      }
     });
-  } else {
     res.status(200).json({
       success: true,
-      message: 'path loaded',
+      data: 'The absent file is downloaded',
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      data: 'An error when downloading an absent file',
     });
   }
 });
@@ -242,17 +273,25 @@ app.get('/clear-cache', (_, res) => {
 const uploadMS = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
-      const { user_id, zip_name } = req.body;
-      const loadPath = `./public/models/data/${user_id}/${path.parse(zip_name).name}`;
+      try {
+        const { user_id, zip_name } = req.body;
+        const loadPath = `./public/models/data/${user_id}/${path.parse(zip_name).name}`;
 
-      if (!fs.existsSync(loadPath)) {
-        fs.mkdirSync(loadPath, { recursive: true });
+        if (!fs.existsSync(loadPath)) {
+          fs.mkdirSync(loadPath, { recursive: true });
+        }
+        cb(null, loadPath);
+        console.log('files loaded');
+      } catch (error) {
+        console.log(error);
       }
-      cb(null, loadPath);
-      console.log('files loaded');
     },
     filename: (req, file, cb) => {
-      cb(null, file.originalname);
+      try {
+        cb(null, file.originalname);
+      } catch (error) {
+        console.log(error);
+      }
     },
   }),
 });

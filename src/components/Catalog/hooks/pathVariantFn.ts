@@ -1,38 +1,78 @@
-import { useState } from 'react';
-import { useCustomDispatch } from '../../../hooks/useCustomDispatch';
-import {
-  setCatalogData,
-  setCatalogFilteredData,
-  setCatalogPath,
-} from '../../../redux/slices/data/filter';
+// import { useState } from 'react';
+// import { useCustomDispatch } from '../../../hooks/useCustomDispatch';
+// import {
+//   setCatalogData,
+//   setCatalogFilteredData,
+//   setCatalogPath,
+// } from '../../../redux/slices/data/filter';
 
-export const pathVariantFn = () => {
-  const [labelPath, setLabelPath] = useState('');
-  const dispatch = useCustomDispatch();
+// export const pathVariantFn = () => {
+//   const [labelPath, setLabelPath] = useState('');
+//   const dispatch = useCustomDispatch();
 
-  type PathFunction = {
-    cb: () => any;
-    path: string;
-    pathLabel: string;
-  };
+//   type PathFunction = {
+//     cb: () => any;
+//     path: string;
+//     pathLabel: string;
+//   };
 
-  const pathFunction = async ({ cb, path, pathLabel }: PathFunction) => {
-    try {
-      const data = await dispatch(cb()).unwrap();
-      setLabelPath(pathLabel);
-      setTimeout(() => {
-        dispatch(setCatalogData(data));
-        dispatch(setCatalogFilteredData(data));
-        dispatch(setCatalogPath(path));
-      }, 1000);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+//   const pathFunction = async ({ cb, path, pathLabel }: PathFunction) => {
+//     try {
+//       const data = await dispatch(cb()).unwrap();
+//       setLabelPath(pathLabel);
+//       setTimeout(() => {
+//         dispatch(setCatalogData(data));
+//         dispatch(setCatalogFilteredData(data));
+//         dispatch(setCatalogPath(path));
+//       }, 1000);
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   };
 
-  return {
-    pathFunction,
-    labelPath,
-    dispatch,
-  };
-};
+//   return {
+//     pathFunction,
+//     labelPath,
+//     dispatch,
+//   };
+// };
+// // import { useState } from 'react';
+// // import { useCustomDispatch } from '../../../hooks/useCustomDispatch';
+// // import {
+// //   setCatalogData,
+// //   setCatalogFilteredData,
+// //   setCatalogPath,
+// // } from '../../../redux/slices/data/filter';
+// // import { useLocation } from 'react-router-dom';
+
+// // export const pathVariantFn = () => {
+// //   const {pathname} = useLocation()
+// //   const [labelPath, setLabelPath] = useState('');
+// //   const dispatch = useCustomDispatch();
+
+// //   type PathFunction = {
+// //     cb: () => any;
+// //     path: string;
+// //     pathLabel: string;
+// //   };
+
+// //   const pathFunction = async ({ cb, path, pathLabel }: PathFunction) => {
+// //     try {
+// //       const data = await dispatch(cb()).unwrap();
+// //       setLabelPath(pathLabel);
+// //       setTimeout(() => {
+// //         dispatch(setCatalogData(data));
+// //         dispatch(setCatalogFilteredData(data));
+// //         dispatch(setCatalogPath(path));
+// //       }, 1000);
+// //     } catch (error) {
+// //       console.error(error);
+// //     }
+// //   };
+
+// //   return {
+// //     pathFunction,
+// //     labelPath,
+// //     dispatch,
+// //   };
+// // };

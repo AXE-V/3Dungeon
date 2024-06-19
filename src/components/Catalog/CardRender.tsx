@@ -1,7 +1,7 @@
 import { Card_1 } from '../Common/Cards/1';
 import { DeleteCollection, PostModel, deletePostCollection } from '../../redux/slices/data/post';
 import { Link, useLocation } from 'react-router-dom';
-import { useCatalogPathes } from './hooks/pathes';
+import { useCatalogPathes } from './hooks/useCatalogPathes.js';
 import { useAuth } from '../../providers/authProvider';
 import { useSelector } from 'react-redux';
 import { postFilterSelector } from '../../redux/slices/data/filter';

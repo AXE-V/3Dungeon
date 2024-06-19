@@ -13,16 +13,23 @@ export const Card_1: FC<SVGComponent & PostModel> = ({ style, model, post }) => 
   const [userData, setUserData] = useState<Tables<'users'> | null>(null);
   const dispatch = useCustomDispatch();
   const [mouseOver, setMouseOver] = useState(false);
+  const [modelDataLoaded, setModelDataLoaded] = useState(false);
 
   useEffect(() => {
     try {
       const getData = async () => {
         const uid = await dispatch(getUserDataByID(post.user_id)).unwrap();
         setUserData(uid);
+        const data = await dispatch(loadPostFiles({ model, post })).unwrap();
+        setTimeout(() => {
+          if (data.success) {
+            setModelDataLoaded(true);
+          } else {
+            setModelDataLoaded(false);
+          }
+        }, 1500);
       };
       getData();
-
-      dispatch(loadPostFiles({ model, post }));
     } catch (error) {
       console.log(error);
     }
@@ -37,20 +44,22 @@ export const Card_1: FC<SVGComponent & PostModel> = ({ style, model, post }) => 
 
   return (
     <S.container>
-      <ModelViewer
-        orbitControlsProps={{ autoRotate: true }}
-        post={post}
-        style={{
-          position: 'absolute',
-          zIndex: -1,
-          width: '18vw',
-          height: '10vw',
-          left: '50%',
-          top: '50%',
-          transform: 'translate(-45%, -60%)',
-          clipPath: cssPathes.bevelPolygon(['0vw', '1.5vw', '0vw', '0vw']),
-        }}
-      />
+      {modelDataLoaded && (
+        <ModelViewer
+          orbitControlsProps={{ autoRotate: true }}
+          post={post}
+          style={{
+            position: 'absolute',
+            zIndex: -1,
+            width: '18vw',
+            height: '10vw',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-45%, -60%)',
+            clipPath: cssPathes.bevelPolygon(['0vw', '1.5vw', '0vw', '0vw']),
+          }}
+        />
+      )}
       <svg
         onMouseOver={onMouseOver}
         onMouseLeave={onMouseLeave}

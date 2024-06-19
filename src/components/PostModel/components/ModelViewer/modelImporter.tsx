@@ -11,10 +11,13 @@ export const modelImporter = (post: ModelImporter) => {
   useEffect(() => {
     try {
       const pathModel = `/public/models/data/${post.user_id}/${getName(post.zip_name)}/scene.tsx`;
-      import(`${pathModel}`).then((d) => {
-        const modelProps: GroupProps = { scale: 30 };
-        setModel(() => d.Model(modelProps));
-      });
+      import(`${pathModel}`)
+        .then((d) => {
+          const modelProps: GroupProps = { scale: 30 };
+          setModel(() => d.Model(modelProps));
+        })
+        .catch((er) => console.log(er));
+      console.log('imported model was loaded');
     } catch (error) {
       console.error(error);
     }
